@@ -4,7 +4,7 @@ var router = express.Router();
 // GET users listing
 router.get('/userlist', function(req, res) {
     var db = req.db;
-    var collection = db.get('usercollection');
+    var collection = db.get('recipes');
     collection.find({},{},function(e,docs){
         res.json(docs);
     });
@@ -13,7 +13,7 @@ router.get('/userlist', function(req, res) {
 // Add new user
 router.post('/adduser', function(req, res) {
     var db = req.db;
-    var collection = db.get('usercollection');
+    var collection = db.get('recipes');
     collection.insert(req.body, function(err, result){
         res.send(
             (err === null) ? { msg: '' } : { msg: err }
@@ -24,7 +24,7 @@ router.post('/adduser', function(req, res) {
 // DELETE to deleteuser
 router.delete('/deleteuser/:id', function(req, res) {
     var db = req.db;
-    var collection = db.get('usercollection');
+    var collection = db.get('recipes');
     var userToDelete = req.params.id;
     collection.remove({ '_id' : userToDelete }, function(err) {
         res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
