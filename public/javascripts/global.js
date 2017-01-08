@@ -46,6 +46,15 @@ function populateTable(){
 
 };
 
+// Gets list of ingredients from each object in database for use in showRecipeInfo()
+var ingredientList = function(list) {
+  var ingredients = "";
+  for (var key in list){
+    ingredients += list[key] + " ";
+  }
+  return ingredients;
+};
+
 // Show User Info
 function showRecipeInfo(event) {
 
@@ -63,7 +72,11 @@ function showRecipeInfo(event) {
 
     //Populate Info Box
     $('#recipeName').text(thisUserObject.name);
-    $('#recipeCuisine').text(thisUserObject.cuisine);
+    $('#recipeMeats').text(ingredientList(thisUserObject.meats));
+    $('#recipeVeggies').text(ingredientList(thisUserObject.veggies));
+    $('#recipeSpices').text(ingredientList(thisUserObject.spices));
+    $('#recipeCondiments').text(ingredientList(thisUserObject.condiments));
+    $('#recipeDry').text(ingredientList(thisUserObject.dry));
 
 };
 
