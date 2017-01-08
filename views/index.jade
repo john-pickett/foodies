@@ -9,48 +9,37 @@ html
         // Wrapper
         #wrapper
         // Recipe Details
-        #userinfo
+        #recipeinfo
           h2 Recipe Details
           p
             strong Name:
-              <span id='userInfoName'></span>
+              <span id='recipeName'></span>
             br
-            strong Age:
-              <span id='userInfoAge'></span>
+            strong Cuisine:
+              <span id='recipeCuisine'></span>
             br
-            strong Gender:
-              <span id='userInfoGender'></span>
-            br
-            strong Location:
-              <span id='userInfoLocation'></span>
-          // /User Info
+          // /RECIPE INFO
 
-        // USER LIST
-        h2 User List
-        #userList
+        // RECIPE LIST
+        h2 Recipe List
+        #recipeList
             table
                 thead
                     th Recipe
-                    th Email
+                    th Cuisine
                     th Delete?
                 tbody
-        // /USER LIST
+        // /RECIPE LIST
 
-        // ADD USER
-        h2 Add User
+        // ADD RECIPE
+        h2 Add Recipe
         #addUser
             fieldset
-                input#inputUserName(type='text', placeholder='Username')
-                input#inputUserEmail(type='text', placeholder='Email')
+                input#inputName(type='text', placeholder='Recipe Name')
+                input#inputCuisine(type='text', placeholder='Cuisine')
                 br
-                input#inputUserFullname(type='text', placeholder='Full Name')
-                input#inputUserAge(type='text', placeholder='Age')
-                br
-                input#inputUserLocation(type='text', placeholder='Location')
-                input#inputUserGender(type='text', placeholder='gender')
-                br
-                button#btnAddUser Add User
-        // /ADD USER
+                button#btnAddRecipe Add Recipe
+        // /ADD RECIPE
 
         // /WRAPPER
         script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')

@@ -8,13 +8,13 @@ $(document).ready(function(){
   populateTable();
 
   // Username link click
-  $('#userList table tbody').on('click', 'td a.linkshowuser', showUserInfo);
+  $('#recipeList table tbody').on('click', 'td a.linkshowuser', showRecipeInfo);
 
-  // Add User button click
-  $('#btnAddUser').on('click', addUser);
+  // Add Recipe button click
+  $('#btnAddRecipe').on('click', addRecipe);
 
   // Delete User link click
-  $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
+  $('#recipeList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
 
 });
 
@@ -35,20 +35,19 @@ function populateTable(){
     $.each(data, function(){
       tableContent += '<tr>';
       tableContent += '<td><a href="#" class="linkshowuser" rel="' + this.name + '">' + this.name + '</a></td>';
-      //tableContent += '<td>' + this.email + '</td>';
-      tableContent += '<td></td>';
+      tableContent += '<td>' + this.cuisine + '</td>';
       tableContent += '<td><a href="#" class="linkdeleteuser" rel="' + this._id + '">delete</a></td>';
       tableContent += '</tr>';
     });
 
     // inject the whole content string into our existing HTML table
-    $('#userList table tbody').html(tableContent);
+    $('#recipeList table tbody').html(tableContent);
   });
 
 };
 
 // Show User Info
-function showUserInfo(event) {
+function showRecipeInfo(event) {
 
     // Prevent Link from Firing
     event.preventDefault();
@@ -57,21 +56,19 @@ function showUserInfo(event) {
     var thisUserName = $(this).attr('rel');
 
     // Get Index of object based on id value
-    var arrayPosition = userListData.map(function(arrayItem) { return arrayItem.username; }).indexOf(thisUserName);
+    var arrayPosition = userListData.map(function(arrayItem) { return arrayItem.name; }).indexOf(thisUserName);
 
     // Get our User Object
     var thisUserObject = userListData[arrayPosition];
 
     //Populate Info Box
-    $('#userInfoName').text(thisUserObject.fullname);
-    $('#userInfoAge').text(thisUserObject.age);
-    $('#userInfoGender').text(thisUserObject.gender);
-    $('#userInfoLocation').text(thisUserObject.location);
+    $('#recipeName').text(thisUserObject.name);
+    $('#recipeCuisine').text(thisUserObject.cuisine);
 
 };
 
 // Add User
-function addUser(event) {
+function addRecipe(event) {
     event.preventDefault();
 
     // Super basic validation - increase errorCount variable if any fields are blank
@@ -85,12 +82,12 @@ function addUser(event) {
 
         // If it is, compile all user info into one object
         var newUser = {
-            'username': $('#addUser fieldset input#inputUserName').val(),
-            'email': $('#addUser fieldset input#inputUserEmail').val(),
-            'fullname': $('#addUser fieldset input#inputUserFullname').val(),
-            'age': $('#addUser fieldset input#inputUserAge').val(),
-            'location': $('#addUser fieldset input#inputUserLocation').val(),
-            'gender': $('#addUser fieldset input#inputUserGender').val()
+            'name': $('#addUser fieldset input#inputName').val(),
+            'cuisine': $('#addUser fieldset input#inputCuisine').val()
+            // 'fullname': $('#addUser fieldset input#inputUserFullname').val(),
+            // 'age': $('#addUser fieldset input#inputUserAge').val(),
+            // 'location': $('#addUser fieldset input#inputUserLocation').val(),
+            // 'gender': $('#addUser fieldset input#inputUserGender').val()
         }
 
         // Use AJAX to post the object to our adduser service
@@ -132,7 +129,7 @@ function deleteUser(event) {
     event.preventDefault();
 
     // Pop up a confirmation dialog
-    var confirmation = confirm('Are you sure you want to delete this user?');
+    var confirmation = confirm('Are you sure you want to delete this recipe?');
 
     // Check and make sure the user confirmed
     if (confirmation === true) {
