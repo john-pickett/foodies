@@ -3,56 +3,74 @@ html
     head
         title= title
         link(rel='stylesheet', href='/public/stylesheets/style.css')
+        link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+
     body
-        h1= title
         block content
         // Wrapper
         #wrapper
-        // Recipe Details
-        #recipeinfo
-          h2 Recipe Details
-          p
-            strong Name:
-              <span id='recipeName'></span>
-            br
-            strong Meats:
-              <span id='recipeMeats'></span>
-            br
-            strong Veggies:
-              <span id='recipeVeggies'></span>
-            br
-            strong Spices:
-              <span id='recipeSpices'></span>
-            br
-            strong Condiments:
-              <span id='recipeCondiments'></span>
-            br
-            strong Dry Goods:
-              <span id='recipeDry'></span>
-            br
-          // /RECIPE INFO
+          .container-fluid
+            // RECIPE LIST
+            .row
+              .col-md-4
+                h2 Recipe List
+                #recipeList
 
-        // RECIPE LIST
-        h2 Recipe List
-        #recipeList
-            table
-                thead
-                    th Recipe
-                    th Cuisine
-                    th Delete?
-                tbody
-        // /RECIPE LIST
+                    table
+                        thead
+                            th Select
+                            th Recipe
+                            th Cuisine
+                            th Delete?
+                        tbody
+                // /RECIPE LIST
 
-        // ADD RECIPE
-        h2 Add Recipe
-        #addUser
-            fieldset
-                input#inputName(type='text', placeholder='Recipe Name')
-                input#inputCuisine(type='text', placeholder='Cuisine')
-                br
-                button#btnAddRecipe Add Recipe
-        // /ADD RECIPE
+              // RECIPE DETAILS
+              .col-md-4
+                #recipeinfo
+                    h2 Recipe Details
+                    p
+                      strong Name
+                        p <span id='recipeName'></span>
+                      br
+
+                    // /RECIPE INFO
+              // GROCERY LIST
+              .col-md-4
+                #grocery-list
+                  h2 Grocery List
+                  p
+                  strong Meats
+                  p <span id='groceryMeats'></span>
+                  br
+                  strong Veggies
+                  p <span id='groceryVeggies'></span>
+                  br
+                  strong Spices
+                  p <span id='grocerySpices'></span>
+                  br
+                  strong Condiments
+                  p <span id='groceryCondiments'></span>
+                  br
+                  strong Dry Goods
+                  p <span id='groceryDry'></span>
+                  br
+
+              // /GROCERY LIST
+
+              // ADD RECIPE
+            .row
+              .col-md-6
+                h2 Add Recipe
+                #addUser
+                    fieldset
+                        input#inputName(type='text', placeholder='Recipe Name')
+                        input#inputCuisine(type='text', placeholder='Cuisine')
+                        br
+                        button#btnAddRecipe Add Recipe
+                // /ADD RECIPE
 
         // /WRAPPER
         script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
+        script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
         script(src='/public/javascripts/global.js')

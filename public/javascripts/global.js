@@ -31,9 +31,10 @@ function populateTable(){
     // adds all user info from database to the global variable
     userListData = data;
 
-    // for each item in our JSON, add a table row and cells to the content string
+    // for each item in our JSON, add a table row and cells to the content string 
     $.each(data, function(){
       tableContent += '<tr>';
+      tableContent += '<td><input type="checkbox" id="' + this.name.toLowerCase().replace(/\s+/g, '') + 'Check"></td>';
       tableContent += '<td><a href="#" class="linkshowuser" rel="' + this.name + '">' + this.name + '</a></td>';
       tableContent += '<td>' + this.cuisine + '</td>';
       tableContent += '<td><a href="#" class="linkdeleteuser" rel="' + this._id + '">delete</a></td>';
@@ -50,12 +51,12 @@ function populateTable(){
 var ingredientList = function(list) {
   var ingredients = "";
   for (var key in list){
-    ingredients += list[key] + " ";
+    ingredients += list[key] + "<br>";
   }
   return ingredients;
 };
 
-// Show User Info
+// Show Recipe Info
 function showRecipeInfo(event) {
 
     // Prevent Link from Firing
@@ -72,11 +73,11 @@ function showRecipeInfo(event) {
 
     //Populate Info Box
     $('#recipeName').text(thisUserObject.name);
-    $('#recipeMeats').text(ingredientList(thisUserObject.meats));
-    $('#recipeVeggies').text(ingredientList(thisUserObject.veggies));
-    $('#recipeSpices').text(ingredientList(thisUserObject.spices));
-    $('#recipeCondiments').text(ingredientList(thisUserObject.condiments));
-    $('#recipeDry').text(ingredientList(thisUserObject.dry));
+    $('#groceryMeats').append(ingredientList(thisUserObject.meats));
+    $('#groceryVeggies').append(ingredientList(thisUserObject.veggies));
+    $('#grocerySpices').append(ingredientList(thisUserObject.spices));
+    $('#groceryCondiments').append(ingredientList(thisUserObject.condiments));
+    $('#groceryDry').append(ingredientList(thisUserObject.dry));
 
 };
 

@@ -12,12 +12,12 @@ a {
 }
 
 #wrapper {
-	padding-left:312px;
+	padding-left:150px;
 	position:relative;
 }
 
 #recipeList {
-	margin:0 0 30px 0;
+	margin:0 0 10px 0;
 }
 	#recipeList table {
 		border-collapse:separate;
@@ -43,7 +43,7 @@ a {
 
 #recipeInfo {
 	width:250px;
-	position:absolute;
+	position:relative;
 	top:0; left:0;
 }
 	#recipeInfo p {
