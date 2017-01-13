@@ -1,5 +1,5 @@
-// Userlist data arra for filling in info box
-var userListData = [];
+// Recipe list data array for filling in info box
+var recipeListData = [];
 
 // DOM Ready
 $(document).ready(function(){
@@ -7,15 +7,17 @@ $(document).ready(function(){
   // Populate the user table on initial page load
   populateTable();
 
-  // Username link click
+  // Recipe name link click
   $('#recipeList table tbody').on('click', 'td a.linkshowuser', showRecipeInfo);
 
   // Add Recipe button click
   $('#btnAddRecipe').on('click', addRecipe);
 
-  // Delete User link click
+  // Delete Recipe link click
   $('#recipeList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
 
+  // Select Recipe Checkbox click
+  $('#recipeList table tbody').on('click', 'td .recipeCheckbox', selectRecipe);
 });
 
 // Functions
@@ -29,12 +31,12 @@ function populateTable(){
   $.getJSON('/users/userlist', function (data){
 
     // adds all user info from database to the global variable
-    userListData = data;
+    recipeListData = data;
 
-    // for each item in our JSON, add a table row and cells to the content string 
+    // for each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
       tableContent += '<tr>';
-      tableContent += '<td><input type="checkbox" id="' + this.name.toLowerCase().replace(/\s+/g, '') + 'Check"></td>';
+      tableContent += '<td><input type="checkbox" id="' + this.name.replace(/\s+/g, '_') + 'Checkbox" class="recipeCheckbox"></td>';
       tableContent += '<td><a href="#" class="linkshowuser" rel="' + this.name + '">' + this.name + '</a></td>';
       tableContent += '<td>' + this.cuisine + '</td>';
       tableContent += '<td><a href="#" class="linkdeleteuser" rel="' + this._id + '">delete</a></td>';
@@ -56,32 +58,50 @@ var ingredientList = function(list) {
   return ingredients;
 };
 
+// Select recipe and add to grocery list
+function selectRecipe() {
+
+    var thisRecipeId = $(this).attr('id'); // this gets the #id from the checkbox: e.g.,LarbCheckbox, Chicken_TacosCheckbox
+
+    var thisRecipeClass = thisRecipeId.replace('Checkbox', ''); // this strips out Checkbox: eg, Larb, Chicken_Tacos
+    var thisRecipeName = thisRecipeClass.replace(/[_]/g, ' '); // this replaces _ with a space: eg, Larb, Chicken Tacos
+    var arrayPosition = recipeListData.map(function(arrayItem) {return arrayItem.name; }).indexOf(thisRecipeName);
+    var thisRecipeObject = recipeListData[arrayPosition];
+
+    // Populate or remove from grocery list
+    if ($('#' + thisRecipeId).is(':checked')) {
+      $('#groceryMeats').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.meats));
+      $('#groceryVeggies').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.veggies));
+      $('#grocerySpices').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.spices));
+      $('#groceryCondiments').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.condiments));
+      $('#groceryDry').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.dry));
+    } else {
+      $('.' + thisRecipeClass).remove();
+    }
+};
+
 // Show Recipe Info
 function showRecipeInfo(event) {
 
     // Prevent Link from Firing
     event.preventDefault();
 
-    // Retrieve username from link rel attribute
-    var thisUserName = $(this).attr('rel');
+    // Retrieve recipe name from link rel attribute
+    var thisRecipeName = $(this).attr('rel');
 
     // Get Index of object based on id value
-    var arrayPosition = userListData.map(function(arrayItem) { return arrayItem.name; }).indexOf(thisUserName);
+    var arrayPosition = recipeListData.map(function(arrayItem) { return arrayItem.name; }).indexOf(thisRecipeName);
 
-    // Get our User Object
-    var thisUserObject = userListData[arrayPosition];
+    // Get our Recipe Object
+    var thisRecipeObject = recipeListData[arrayPosition];
 
     //Populate Info Box
-    $('#recipeName').text(thisUserObject.name);
-    $('#groceryMeats').append(ingredientList(thisUserObject.meats));
-    $('#groceryVeggies').append(ingredientList(thisUserObject.veggies));
-    $('#grocerySpices').append(ingredientList(thisUserObject.spices));
-    $('#groceryCondiments').append(ingredientList(thisUserObject.condiments));
-    $('#groceryDry').append(ingredientList(thisUserObject.dry));
+    $('#recipeName').text(thisRecipeObject.name);
+    // $('#groceryMeats').append(ingredientList(thisRecipeObject.meats));
 
 };
 
-// Add User
+// Add Recipe
 function addRecipe(event) {
     event.preventDefault();
 
