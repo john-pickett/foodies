@@ -10,6 +10,10 @@ html
         // Wrapper
         #wrapper
           .container-fluid
+            .navbar
+              ul
+                li <a href="/">Home </a> |
+                li <a href="/newrecipe"> Add New Recipe </a>
             // RECIPE LIST
             .row
               .col-md-4
@@ -57,18 +61,6 @@ html
                   br
 
               // /GROCERY LIST
-
-              // ADD RECIPE
-            .row
-              .col-md-6
-                h2 Add Recipe
-                #addUser
-                    fieldset
-                        input#inputName(type='text', placeholder='Recipe Name')
-                        input#inputCuisine(type='text', placeholder='Cuisine')
-                        br
-                        button#btnAddRecipe Add Recipe
-                // /ADD RECIPE
 
         // /WRAPPER
         script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')

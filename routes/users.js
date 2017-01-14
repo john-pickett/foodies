@@ -13,13 +13,24 @@ router.get('/userlist', function(req, res) {
 // Add new user
 router.post('/adduser', function(req, res) {
     var db = req.db;
+    var recipe = {
+      name: req.body.name,
+      cuisine: req.body.cuisine,
+      meats: req.body.meats,
+      veggies: req.body.veggies,
+      spices: req.body.spices,
+      condiments: req.body.condiments,
+      dry: req.body.dry,
+      other: req.body.other
+    };
     var collection = db.get('recipes');
-    collection.insert(req.body, function(err, result){
+    collection.insert(recipe, function(err, result){
         res.send(
             (err === null) ? { msg: '' } : { msg: err }
         );
     });
 });
+
 
 // DELETE to deleteuser
 router.delete('/deleteuser/:id', function(req, res) {

@@ -56,3 +56,41 @@ fieldset {
 	border:0;
 	padding:0; margin:0;
 }
+
+#newRecipeList {
+  margin: 20px;
+}
+
+#newRecipeList table {
+  border-collapse:separate;
+  border-spacing:1px;
+  background:#CCC;
+}
+  #newRecipeList table th {
+    background:#EEE;
+    font-weight:600;
+    padding:10px 20px;
+    text-align:center;
+  }
+  #newRecipeList table tbody {
+    padding:0; margin:0;
+    border-collapse:collapse;
+    border-spacing:0px;
+  }
+    #newRecipeList table td {
+      background:#FFF;
+      padding:5px 10px;
+      text-align:center;
+    }
+
+#addRecipe {
+  margin: 20px;
+}
+
+.navbar {
+  padding: 15px;
+
+}
+  .navbar li {
+    display: inline;
+  }

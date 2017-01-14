@@ -8,16 +8,16 @@ $(document).ready(function(){
   populateTable();
 
   // Recipe name link click
-  $('#recipeList table tbody').on('click', 'td a.linkshowuser', showRecipeInfo);
+  $('#newRecipeList table tbody').on('click', 'td a.linkshowuser', showRecipeInfo);
 
   // Add Recipe button click
   $('#btnAddRecipe').on('click', addRecipe);
 
   // Delete Recipe link click
-  $('#recipeList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
+  $('#newRecipeList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
 
   // Select Recipe Checkbox click
-  $('#recipeList table tbody').on('click', 'td .recipeCheckbox', selectRecipe);
+  $('#newRecipeList table tbody').on('click', 'td .recipeCheckbox', selectRecipe);
 });
 
 // Functions
@@ -36,7 +36,6 @@ function populateTable(){
     // for each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
       tableContent += '<tr>';
-      tableContent += '<td><input type="checkbox" id="' + this.name.replace(/\s+/g, '_') + 'Checkbox" class="recipeCheckbox"></td>';
       tableContent += '<td><a href="#" class="linkshowuser" rel="' + this.name + '">' + this.name + '</a></td>';
       tableContent += '<td>' + this.cuisine + '</td>';
       tableContent += '<td><a href="#" class="linkdeleteuser" rel="' + this._id + '">delete</a></td>';
@@ -47,7 +46,6 @@ function populateTable(){
 
     // need different data outputs on home and newrecipe pages
     // easiest to make two js files and call the appropriate one on each page?
-    $('#recipeList table tbody').html(tableContent);
     $('#newRecipeList table tbody').html(tableContent);
   });
 
@@ -111,28 +109,60 @@ function addRecipe(event) {
 
     // Super basic validation - increase errorCount variable if any fields are blank
     var errorCount = 0;
-    $('#addRecipe input').each(function(index, val) {
-        if($(this).val() === '') { errorCount++; }
-    });
+    // $('#addRecipe input').each(function(index, val) {
+    //     if($(this).val() === '') { errorCount++; }
+    // });
 
     // Check and make sure errorCount's still at zero
     if(errorCount === 0) {
 
         // If it is, compile all user info into one object
-        var newUser = {
+        var newRecipe = {
             'name': $('#addRecipe fieldset input#inputName').val(),
-            'cuisine': $('#addRecipe fieldset input#inputCuisine').val()
-            // 'fullname': $('#addUser fieldset input#inputUserFullname').val(),
-            // 'age': $('#addUser fieldset input#inputUserAge').val(),
-            // 'location': $('#addUser fieldset input#inputUserLocation').val(),
-            // 'gender': $('#addUser fieldset input#inputUserGender').val()
-        }
+            'cuisine': $('#addRecipe fieldset input#inputCuisine').val(),
+            'meats': {
+              'one': $('#addRecipe fieldset input#inputMeat1').val(),
+              'two': $('#addRecipe fieldset input#inputMeat2').val(),
+              'three': $('#addRecipe fieldset input#inputMeat3').val(),
+              'four': $('#addRecipe fieldset input#inputMeat4').val()
+            },
+            'veggies': {
+              'one': $('#addRecipe fieldset input#inputVeggies1').val(),
+              'two': $('#addRecipe fieldset input#inputVeggies2').val(),
+              'three': $('#addRecipe fieldset input#inputVeggies3').val(),
+              'four': $('#addRecipe fieldset input#inputVeggies4').val()
+            },
+            'spices': {
+              'one': $('#addRecipe fieldset input#inputSpices1').val(),
+              'two': $('#addRecipe fieldset input#inputSpices2').val(),
+              'three': $('#addRecipe fieldset input#inputSpices3').val(),
+              'four': $('#addRecipe fieldset input#inputSpices4').val()
+            },
+            'condiments': {
+              'one': $('#addRecipe fieldset input#inputCondiments1').val(),
+              'two': $('#addRecipe fieldset input#inputCondiments2').val(),
+              'three': $('#addRecipe fieldset input#inputCondiments3').val(),
+              'four': $('#addRecipe fieldset input#inputCondiments4').val()
+            },
+            'dry': {
+              'one': $('#addRecipe fieldset input#inputDry1').val(),
+              'two': $('#addRecipe fieldset input#inputDry2').val(),
+              'three': $('#addRecipe fieldset input#inputDry3').val(),
+              'four': $('#addRecipe fieldset input#inputDry4').val()
+            },
+            'other': {
+              'one': $('#addRecipe fieldset input#inputOther1').val(),
+              'two': $('#addRecipe fieldset input#inputOther2').val(),
+              'three': $('#addRecipe fieldset input#inputOther3').val(),
+              'four': $('#addRecipe fieldset input#inputOther4').val()
+            }
+        };
 
         // Use AJAX to post the object to our adduser service
         $.ajax({
             type: 'POST',
             data: newRecipe,
-            url: '/users/addrecipe',
+            url: '/users/adduser',
             dataType: 'JSON'
         }).done(function( response ) {
 

@@ -1,0 +1,75 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/public/stylesheets/style.css')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+
+    body
+      block content
+        // Wrapper
+        #wrapper
+          .container-fluid
+            .navbar
+              ul
+                li <a href="/">Home </a> |
+                li <a href="/newrecipe"> Add New Recipe </a>
+            .row
+              .col-md-4
+                h2 Add New Recipe
+                #addRecipe
+                  fieldset
+                    input#inputName(type='text', placeholder='Recipe Name')
+                    input#inputCuisine(type='text', placeholder='Cuisine')
+                    br
+                    input#inputMeat1(type='text', placeholder='Meat 1')
+                    input#inputMeat2(type='text', placeholder='Meat 2')
+                    br
+                    input#inputMeat3(type='text', placeholder='Meat 3')
+                    input#inputMeat4(type='text', placeholder='Meat 4')
+                    br
+                    input#inputVeggies1(type='text', placeholder='Veggies 1')
+                    input#inputVeggies2(type='text', placeholder='Veggies 2')
+                    br
+                    input#inputVeggies3(type='text', placeholder='Veggies 3')
+                    input#inputVeggies4(type='text', placeholder='Veggies 4')
+                    br
+                    input#inputSpices1(type='text', placeholder='Spices 1')
+                    input#inputSpices2(type='text', placeholder='Spices 2')
+                    br
+                    input#inputSpices3(type='text', placeholder='Spices 3')
+                    input#inputSpices4(type='text', placeholder='Spices 4')
+                    br
+                    input#inputCondiments1(type='text', placeholder='Condiments 1')
+                    input#inputCondiments2(type='text', placeholder='Condiments 2')
+                    br
+                    input#inputCondiments3(type='text', placeholder='Condiments 3')
+                    input#inputCondiments4(type='text', placeholder='Condiments 4')
+                    br
+                    input#inputDry1(type='text', placeholder='Dry Goods 1')
+                    input#inputDry2(type='text', placeholder='Dry Goods 2')
+                    br
+                    input#inputDry3(type='text', placeholder='Dry Goods 3')
+                    input#inputDry4(type='text', placeholder='Dry Goods 4')
+                    br
+                    input#inputOther1(type='text', placeholder='Other 1')
+                    input#inputOther2(type='text', placeholder='Other 2')
+                    br
+                    input#inputOther3(type='text', placeholder='Other 3')
+                    input#inputOther4(type='text', placeholder='Other 4')
+                    br
+                    button#btnAddRecipe Add Recipe
+                  p "name":"Larb","cuisine":"Asian","meats":{"one":"Ground Turkey, 3 lbs."},"veggies":{"one":"Onion, large","two":"Cabbage, 1 head","three":"Green Onions, sprinkle"},"condiments":{"one":"Tamari, 4 Tbsp","two":"Fish Sauce, 1 tsp"},"spices":{"one":"Ginger, 2 Tbsp","two":"Garlic, 3 cloves","three":"Lemongrass, 2 Tbsp","four":"Basil, 2 Tbsp","five":"Cilantro, 2 Tbsp"},"dry":{"one":"None"}}
+              .col-md-4
+                h2 View Recipe Details
+                #newRecipeList
+                  table
+                    thead
+                      th Recipe
+                      th Details
+                    tbody
+
+
+        script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
+        script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+        script(src='/public/javascripts/newrecipe.js')
