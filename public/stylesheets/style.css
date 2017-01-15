@@ -83,7 +83,7 @@ fieldset {
       text-align:center;
     }
 
-#addRecipe {
+#addRecipePanel {
   margin: 20px;
 }
 
@@ -94,3 +94,7 @@ fieldset {
   .navbar li {
     display: inline;
   }
+
+#editRecipePanel {
+  display: none;
+}

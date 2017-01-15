@@ -53,7 +53,7 @@ function populateTable(){
 
 };
 
-// Gets list of ingredients from each object in database for use in selectRecipe()
+// Gets a clean list of ingredients from thisRecipeObject for use in selectRecipe()
 var ingredientList = function(list) {
   var ingredients = "";
   for (var key in list){
@@ -79,6 +79,7 @@ function selectRecipe() {
       $('#grocerySpices').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.spices));
       $('#groceryCondiments').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.condiments));
       $('#groceryDry').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.dry));
+      $('#groceryOther').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.other));
     } else {
       $('.' + thisRecipeClass).remove();
     }
@@ -161,7 +162,7 @@ function addRecipe(event) {
     }
 };
 
-// Delete User
+// Delete Recipe
 function deleteUser(event) {
 
     event.preventDefault();

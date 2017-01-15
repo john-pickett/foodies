@@ -16,8 +16,8 @@ html
                 li <a href="/newrecipe"> Add New Recipe </a>
             .row
               .col-md-4
-                h2 Add New Recipe
-                #addRecipe
+                #addRecipePanel
+                  h2 Add New Recipe
                   fieldset
                     input#inputName(type='text', placeholder='Recipe Name')
                     input#inputCuisine(type='text', placeholder='Cuisine')
@@ -59,6 +59,51 @@ html
                     input#inputOther4(type='text', placeholder='Other 4')
                     br
                     button#btnAddRecipe Add Recipe
+                #editRecipePanel
+                  h2 Edit Recipe
+                  #editRecipe
+                    fieldset
+                      input#editName(type='text', placeholder='Recipe Name')
+                      input#editCuisine(type='text', placeholder='Cuisine')
+                      br
+                      input#editMeat1(type='text', placeholder='Meat 1')
+                      input#editMeat2(type='text', placeholder='Meat 2')
+                      br
+                      input#editMeat3(type='text', placeholder='Meat 3')
+                      input#editMeat4(type='text', placeholder='Meat 4')
+                      br
+                      input#editVeggies1(type='text', placeholder='Veggies 1')
+                      input#editVeggies2(type='text', placeholder='Veggies 2')
+                      br
+                      input#editVeggies3(type='text', placeholder='Veggies 3')
+                      input#editVeggies4(type='text', placeholder='Veggies 4')
+                      br
+                      input#editSpices1(type='text', placeholder='Spices 1')
+                      input#editSpices2(type='text', placeholder='Spices 2')
+                      br
+                      input#editSpices3(type='text', placeholder='Spices 3')
+                      input#editSpices4(type='text', placeholder='Spices 4')
+                      br
+                      input#editCondiments1(type='text', placeholder='Condiments 1')
+                      input#editCondiments2(type='text', placeholder='Condiments 2')
+                      br
+                      input#editCondiments3(type='text', placeholder='Condiments 3')
+                      input#editCondiments4(type='text', placeholder='Condiments 4')
+                      br
+                      input#editDry1(type='text', placeholder='Dry Goods 1')
+                      input#editDry2(type='text', placeholder='Dry Goods 2')
+                      br
+                      input#editDry3(type='text', placeholder='Dry Goods 3')
+                      input#editDry4(type='text', placeholder='Dry Goods 4')
+                      br
+                      input#editOther1(type='text', placeholder='Other 1')
+                      input#editOther2(type='text', placeholder='Other 2')
+                      br
+                      input#editOther3(type='text', placeholder='Other 3')
+                      input#editOther4(type='text', placeholder='Other 4')
+                      br
+                      button#btnUpdateRecipe Update Recipe
+                      button#btnCancelEditRecipe Cancel Edit
               .col-md-4
                 h2 View Recipe Details
                 #newRecipeList
@@ -66,6 +111,7 @@ html
                     thead
                       th Recipe
                       th Details
+                      th Update / Delete
                     tbody
 
 

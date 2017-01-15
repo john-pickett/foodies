@@ -31,6 +31,17 @@ router.post('/adduser', function(req, res) {
     });
 });
 
+// PUT to update recipes
+router.put('/updaterecipe/:id', function(req, res){
+  var db = req.db;
+  var collection = db.get('recipes');
+  var recipeToUpdate = req.params.id;
+  var doc = { $set: req.body };
+  collection.update({ '_id': recipeToUpdate }, doc, function(err){
+    res.send((err === null) ? {msg: '' } : { msg:'error: ' + err });
+  });
+});
+
 
 // DELETE to deleteuser
 router.delete('/deleteuser/:id', function(req, res) {
