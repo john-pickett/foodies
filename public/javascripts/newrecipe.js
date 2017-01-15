@@ -103,61 +103,68 @@ function showRecipeInfo(event) {
 
 };
 
+// function to remove empty key/value pairs from newRecipe object below
+function remover(input) {
+  for (var cat in input) {
+    for (var ings in input[cat]){
+      if (input[cat][ings].length === 0) {
+        delete input[cat][ings];
+      }
+    }
+  }
+  return input;
+};
+
 // Add Recipe
 function addRecipe(event) {
     event.preventDefault();
 
-    // Super basic validation - increase errorCount variable if any fields are blank
-    var errorCount = 0;
-    // $('#addRecipe input').each(function(index, val) {
-    //     if($(this).val() === '') { errorCount++; }
-    // });
+    // Compile all Recipe info into one object
+    var newRecipe = {
+        'name': $('#addRecipe fieldset input#inputName').val(),
+        'cuisine': $('#addRecipe fieldset input#inputCuisine').val(),
+        'meats': {
+          'one': $('#addRecipe fieldset input#inputMeat1').val(),
+          'two': $('#addRecipe fieldset input#inputMeat2').val(),
+          'three': $('#addRecipe fieldset input#inputMeat3').val(),
+          'four': $('#addRecipe fieldset input#inputMeat4').val()
+        },
+        'veggies': {
+          'one': $('#addRecipe fieldset input#inputVeggies1').val(),
+          'two': $('#addRecipe fieldset input#inputVeggies2').val(),
+          'three': $('#addRecipe fieldset input#inputVeggies3').val(),
+          'four': $('#addRecipe fieldset input#inputVeggies4').val()
+        },
+        'spices': {
+          'one': $('#addRecipe fieldset input#inputSpices1').val(),
+          'two': $('#addRecipe fieldset input#inputSpices2').val(),
+          'three': $('#addRecipe fieldset input#inputSpices3').val(),
+          'four': $('#addRecipe fieldset input#inputSpices4').val()
+        },
+        'condiments': {
+          'one': $('#addRecipe fieldset input#inputCondiments1').val(),
+          'two': $('#addRecipe fieldset input#inputCondiments2').val(),
+          'three': $('#addRecipe fieldset input#inputCondiments3').val(),
+          'four': $('#addRecipe fieldset input#inputCondiments4').val()
+        },
+        'dry': {
+          'one': $('#addRecipe fieldset input#inputDry1').val(),
+          'two': $('#addRecipe fieldset input#inputDry2').val(),
+          'three': $('#addRecipe fieldset input#inputDry3').val(),
+          'four': $('#addRecipe fieldset input#inputDry4').val()
+        },
+        'other': {
+          'one': $('#addRecipe fieldset input#inputOther1').val(),
+          'two': $('#addRecipe fieldset input#inputOther2').val(),
+          'three': $('#addRecipe fieldset input#inputOther3').val(),
+          'four': $('#addRecipe fieldset input#inputOther4').val()
+        }
+      };
 
-    // Check and make sure errorCount's still at zero
-    if(errorCount === 0) {
+      newRecipe = remover(newRecipe);
+      console.log(newRecipe);
 
-        // If it is, compile all user info into one object
-        var newRecipe = {
-            'name': $('#addRecipe fieldset input#inputName').val(),
-            'cuisine': $('#addRecipe fieldset input#inputCuisine').val(),
-            'meats': {
-              'one': $('#addRecipe fieldset input#inputMeat1').val(),
-              'two': $('#addRecipe fieldset input#inputMeat2').val(),
-              'three': $('#addRecipe fieldset input#inputMeat3').val(),
-              'four': $('#addRecipe fieldset input#inputMeat4').val()
-            },
-            'veggies': {
-              'one': $('#addRecipe fieldset input#inputVeggies1').val(),
-              'two': $('#addRecipe fieldset input#inputVeggies2').val(),
-              'three': $('#addRecipe fieldset input#inputVeggies3').val(),
-              'four': $('#addRecipe fieldset input#inputVeggies4').val()
-            },
-            'spices': {
-              'one': $('#addRecipe fieldset input#inputSpices1').val(),
-              'two': $('#addRecipe fieldset input#inputSpices2').val(),
-              'three': $('#addRecipe fieldset input#inputSpices3').val(),
-              'four': $('#addRecipe fieldset input#inputSpices4').val()
-            },
-            'condiments': {
-              'one': $('#addRecipe fieldset input#inputCondiments1').val(),
-              'two': $('#addRecipe fieldset input#inputCondiments2').val(),
-              'three': $('#addRecipe fieldset input#inputCondiments3').val(),
-              'four': $('#addRecipe fieldset input#inputCondiments4').val()
-            },
-            'dry': {
-              'one': $('#addRecipe fieldset input#inputDry1').val(),
-              'two': $('#addRecipe fieldset input#inputDry2').val(),
-              'three': $('#addRecipe fieldset input#inputDry3').val(),
-              'four': $('#addRecipe fieldset input#inputDry4').val()
-            },
-            'other': {
-              'one': $('#addRecipe fieldset input#inputOther1').val(),
-              'two': $('#addRecipe fieldset input#inputOther2').val(),
-              'three': $('#addRecipe fieldset input#inputOther3').val(),
-              'four': $('#addRecipe fieldset input#inputOther4').val()
-            }
-        };
-
+        console.log(JSON.stringify(newRecipe));
         // Use AJAX to post the object to our adduser service
         $.ajax({
             type: 'POST',
@@ -183,13 +190,7 @@ function addRecipe(event) {
 
             }
         });
-    }
-    else {
-        // If errorCount is more than 0, error out
-        alert('Please fill in all fields');
-        return false;
-    }
-};
+      };
 
 // Delete User
 function deleteUser(event) {
