@@ -55,7 +55,7 @@ var ingredientList = function(list) {
   return ingredients;
 };
 
-// Select recipe and add to grocery list
+// Select recipe and add to grocery list and menu plan
 function selectRecipe() {
 
     var thisRecipeId = $(this).attr('id'); // this gets the #id from the checkbox: e.g.,LarbCheckbox, Chicken_TacosCheckbox
@@ -73,6 +73,13 @@ function selectRecipe() {
       $('#groceryCondiments').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.condiments));
       $('#groceryDry').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.dry));
       $('#groceryOther').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.other));
+    } else {
+      $('.' + thisRecipeClass).remove();
+    }
+
+    // Add or remove recipe from Menu Plan
+    if ($('#' + thisRecipeId).is(':checked')) {
+      $('#menu-plan').append("<div class=" + thisRecipeClass + ">" + thisRecipeName);
     } else {
       $('.' + thisRecipeClass).remove();
     }
