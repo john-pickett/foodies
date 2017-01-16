@@ -10,12 +10,6 @@ $(document).ready(function(){
   // Recipe name link click
   $('#recipeList table tbody').on('click', 'td a.linkshowuser', showRecipeInfo);
 
-  // Add Recipe button click
-  $('#btnAddRecipe').on('click', addRecipe);
-
-  // Delete Recipe link click
-  $('#recipeList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
-
   // Select Recipe Checkbox click
   $('#recipeList table tbody').on('click', 'td .recipeCheckbox', selectRecipe);
 });
@@ -39,7 +33,6 @@ function populateTable(){
       tableContent += '<td><input type="checkbox" id="' + this.name.replace(/\s+/g, '_') + 'Checkbox" class="recipeCheckbox"></td>';
       tableContent += '<td><a href="#" class="linkshowuser" rel="' + this.name + '">' + this.name + '</a></td>';
       tableContent += '<td>' + this.cuisine + '</td>';
-      tableContent += '<td><a href="#" class="linkdeleteuser" rel="' + this._id + '">delete</a></td>';
       tableContent += '</tr>';
     });
 
@@ -103,100 +96,5 @@ function showRecipeInfo(event) {
     //Populate Info Box
     $('#recipeName').text(thisRecipeObject.name);
     // $('#groceryMeats').append(ingredientList(thisRecipeObject.meats));
-
-};
-
-// Add Recipe
-function addRecipe(event) {
-    event.preventDefault();
-
-    // Super basic validation - increase errorCount variable if any fields are blank
-    var errorCount = 0;
-    $('#addRecipe input').each(function(index, val) {
-        if($(this).val() === '') { errorCount++; }
-    });
-
-    // Check and make sure errorCount's still at zero
-    if(errorCount === 0) {
-
-        // If it is, compile all user info into one object
-        var newUser = {
-            'name': $('#addRecipe fieldset input#inputName').val(),
-            'cuisine': $('#addRecipe fieldset input#inputCuisine').val()
-            // 'fullname': $('#addUser fieldset input#inputUserFullname').val(),
-            // 'age': $('#addUser fieldset input#inputUserAge').val(),
-            // 'location': $('#addUser fieldset input#inputUserLocation').val(),
-            // 'gender': $('#addUser fieldset input#inputUserGender').val()
-        }
-
-        // Use AJAX to post the object to our adduser service
-        $.ajax({
-            type: 'POST',
-            data: newRecipe,
-            url: '/users/addrecipe',
-            dataType: 'JSON'
-        }).done(function( response ) {
-
-            // Check for successful (blank) response
-            if (response.msg === '') {
-
-                // Clear the form inputs
-                $('#addRecipe fieldset input').val('');
-
-                // Update the table
-                populateTable();
-
-            }
-            else {
-
-                // If something goes wrong, alert the error message that our service returned
-                alert('Error: ' + response.msg);
-
-            }
-        });
-    }
-    else {
-        // If errorCount is more than 0, error out
-        alert('Please fill in all fields');
-        return false;
-    }
-};
-
-// Delete Recipe
-function deleteUser(event) {
-
-    event.preventDefault();
-
-    // Pop up a confirmation dialog
-    var confirmation = confirm('Are you sure you want to delete this recipe?');
-
-    // Check and make sure the user confirmed
-    if (confirmation === true) {
-
-        // If they did, do our delete
-        $.ajax({
-            type: 'DELETE',
-            url: '/users/deleteuser/' + $(this).attr('rel')
-        }).done(function( response ) {
-
-            // Check for a successful (blank) response
-            if (response.msg === '') {
-            }
-            else {
-                alert('Error: ' + response.msg);
-            }
-
-            // Update the table
-            populateTable();
-
-        });
-
-    }
-    else {
-
-        // If they said no to the confirm, do nothing
-        return false;
-
-    }
 
 };

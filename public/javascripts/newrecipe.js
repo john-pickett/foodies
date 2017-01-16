@@ -176,6 +176,7 @@ function remover(input) {
   return input;
 };
 
+
 // Add Recipe
 function addRecipe(event) {
     event.preventDefault();
@@ -237,6 +238,12 @@ function addRecipe(event) {
 
                 // Clear the form inputs
                 $('#addRecipe fieldset input').val('');
+
+                //show successful message
+                $('#addRecipe').append("<span class='textTimer'>Recipe was added successfully!</span>");
+                setTimeout( function(){
+                  $('.textTimer').remove();
+                }, 2000);
 
                 // Update the table
                 populateTable();
@@ -310,7 +317,13 @@ function updateRecipe(event) {
           if (response.msg === '') {
 
               // Clear the form inputs
-              $('#addRecipe fieldset input').val('');
+              $('#editRecipe fieldset input').val('');
+
+              //show successful message
+              $('#editRecipe').append("<span class='textTimer'>Recipe was updated successfully!</span>");
+              setTimeout( function(){
+                $('.textTimer').remove();
+              }, 2000);
 
               // Update the table
               populateTable();
@@ -324,7 +337,7 @@ function updateRecipe(event) {
       });
   };
 
-// Delete User
+// Delete Recipe
 function deleteUser(event) {
 
     event.preventDefault();
@@ -343,8 +356,21 @@ function deleteUser(event) {
 
             // Check for a successful (blank) response
             if (response.msg === '') {
+
+              //show successful message
+              if($('#addRecipePanel').is(':visible')) {
+                $('#addRecipe').append("<span class='textTimer'>Recipe was deleted successfully!</span>");
+                setTimeout( function(){
+                  $('.textTimer').remove();
+                }, 2000);
+              } else {
+                $('#editRecipe').append("<span class='textTimer'>Recipe was deleted successfully!</span>");
+                setTimeout( function(){
+                  $('.textTimer').remove();
+              }, 2000);
             }
-            else {
+
+            } else {
                 alert('Error: ' + response.msg);
             }
 
