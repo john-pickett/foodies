@@ -14,54 +14,69 @@ html
               ul
                 li <a href="/">Home </a> |
                 li <a href="/newrecipe"> Add New Recipe </a>
-            // RECIPE LIST
+            // RECIPE LIST TABLE
             .row
               .col-md-4
                 h2 Recipe List
                 #recipeList
-
-                    table
-                        thead
-                            th Select
-                            th Recipe
-                            th Cuisine
-                        tbody
-                // /RECIPE LIST
+                  #cuisine-select
+                    select(name="cuisine")
+                  table
+                    thead
+                      th Select
+                      th Recipe
+                      th Cuisine
+                    tbody
+                  // /RECIPE LIST
               // RECIPE DETAILS
               .col-md-4
                 #recipeinfo
                     h2 Recipe Details
                     p
                       strong Name
-                        p <span id='recipeName'></span>
-                      br
+                      p <span id='recipeName'></span>
+                      strong Description
+                      p <span id='recipePicture'></span>
+                      p <span id='recipeDescription'></span>
+
 
                     // /RECIPE INFO
-              // GROCERY LIST
+              // MENU PLAN
               .col-md-4
+                h2 Menu Plan
+                #menu-plan
+                p
+                // /MENU PLAN
+              // GROCERY LIST
+            .row
+              .col-md-4
+                h2 Grocery List
+                button#btnPrintList Print Grocery List
                 #grocery-list
-                  h2 Grocery List
-                  p
-                  strong Meats
-                  p <span id='groceryMeats'></span>
-                  br
-                  strong Veggies
-                  p <span id='groceryVeggies'></span>
-                  br
-                  strong Spices
-                  p <span id='grocerySpices'></span>
-                  br
-                  strong Condiments
-                  p <span id='groceryCondiments'></span>
-                  br
-                  strong Dry Goods
-                  p <span id='groceryDry'></span>
-                  br
-                  strong Other
-                  p <span id='groceryOther'></span>
-                  br
+                  .row
+                    .col-xs-6
+                      p
+                      strong Meats
+                      p <span id='groceryMeats'></span>
+                      br
+                      strong Veggies
+                      p <span id='groceryVeggies'></span>
+                      br
+                      strong Spices
+                      p <span id='grocerySpices'></span>
+                      br
+                    .col-xs-6
+                      strong Condiments
+                      p <span id='groceryCondiments'></span>
+                      br
+                      strong Dry Goods
+                      p <span id='groceryDry'></span>
+                      br
+                      strong Other
+                      p <span id='groceryOther'></span>
+                      br
 
-              // /GROCERY LIST
+                    // /GROCERY LIST
         // /WRAPPER
         script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
         script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')

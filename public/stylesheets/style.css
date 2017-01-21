@@ -98,3 +98,7 @@ fieldset {
 #editRecipePanel {
   display: none;
 }
+
+#cuisine-select{
+  float: right;
+}

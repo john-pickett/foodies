@@ -8,7 +8,7 @@ $(document).ready(function(){
   populateTable();
 
   // Recipe name link click
-  $('#newRecipeList table tbody').on('click', 'td a.linkshowuser', showRecipeInfo);
+  //$('#newRecipeList table tbody').on('click', 'td a.linkshowuser', showRecipeInfo);
 
   // Add Recipe button click
   $('#btnAddRecipe').on('click', addRecipe);
@@ -17,7 +17,7 @@ $(document).ready(function(){
   $('#newRecipeList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
 
   // Select Recipe Checkbox click
-  $('#newRecipeList table tbody').on('click', 'td .recipeCheckbox', selectRecipe);
+  //$('#newRecipeList table tbody').on('click', 'td .recipeCheckbox', selectRecipe);
 
   // Start recipe update process
   $('#newRecipeList table tbody').on('click', 'td a.linkedituser', editRecipeInfo);
@@ -45,7 +45,8 @@ function populateTable(){
     // for each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
       tableContent += '<tr>';
-      tableContent += '<td><a href="#" class="linkshowuser" rel="' + this.name + '">' + this.name + '</a></td>';
+      //tableContent += '<td><a href="#" class="linkshowuser" rel="' + this.name + '">' + this.name + '</a></td>';
+      tableContent += '<td>' + this.name + '</td>';
       tableContent += '<td>' + this.cuisine + '</td>';
       tableContent += '<td><a href="#" class="linkdeleteuser" rel="' + this._id + '">delete</a> / <a href="#" class="linkedituser" rel="' + this._id + '">edit</a></td>';
       tableContent += '</tr>';
@@ -53,8 +54,6 @@ function populateTable(){
 
     // inject the whole content string into our existing HTML table
 
-    // need different data outputs on home and newrecipe pages
-    // easiest to make two js files and call the appropriate one on each page?
     $('#newRecipeList table tbody').html(tableContent);
   });
 
@@ -77,6 +76,8 @@ function editRecipeInfo(event) {
   // Populate edit recipe panel
   $('#editName').val(thisRecipeObject.name);
   $('#editCuisine').val(thisRecipeObject.cuisine);
+  $('#editDescription').val(thisRecipeObject.description);
+  $('#editPicture').val(thisRecipeObject.picture);
   $('#editMeat1').val(thisRecipeObject.meats.one);
   $('#editMeat2').val(thisRecipeObject.meats.two);
   $('#editMeat3').val(thisRecipeObject.meats.three);
@@ -185,6 +186,8 @@ function addRecipe(event) {
     var newRecipe = {
         'name': $('#addRecipePanel fieldset input#inputName').val(),
         'cuisine': $('#addRecipePanel fieldset input#inputCuisine').val(),
+        'description': $('#addRecipePanel fieldset input#inputDescription').val(),
+        'picture': $('#addRecipePanel fieldset input#inputPicture').val(),
         'meats': {
           'one': $('#addRecipePanel fieldset input#inputMeat1').val(),
           'two': $('#addRecipePanel fieldset input#inputMeat2').val(),
@@ -225,7 +228,7 @@ function addRecipe(event) {
 
      newRecipe = remover(newRecipe);
 
-        // Use AJAX to post the object to our adduser service
+        // Use AJAX to post the object to our addrecipe service
         $.ajax({
             type: 'POST',
             data: newRecipe,
@@ -266,6 +269,8 @@ function updateRecipe(event) {
   var updatedRecipe = {
       'name': $('#editRecipe fieldset input#editName').val(),
       'cuisine': $('#editRecipe fieldset input#editCuisine').val(),
+      'description': $('#editRecipe fieldset input#editDescription').val(),
+      'picture': $('#editRecipe fieldset input#editPicture').val(),
       'meats': {
         'one': $('#editRecipe fieldset input#editMeat1').val(),
         'two': $('#editRecipe fieldset input#editMeat2').val(),

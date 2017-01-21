@@ -1,10 +1,11 @@
 // Recipe list data array for filling in info box
 var recipeListData = [];
 
+
 // DOM Ready
 $(document).ready(function(){
 
-  // Populate the user table on initial page load
+  // Populate the recipe table on initial page load
   populateTable();
 
   // Recipe name link click
@@ -12,19 +13,93 @@ $(document).ready(function(){
 
   // Select Recipe Checkbox click
   $('#recipeList table tbody').on('click', 'td .recipeCheckbox', selectRecipe);
+
+  // Print Grocery List
+  $('#btnPrintList').on('click', printList);
+
+  // Select Cuisine function
+  $('#cuisine-select').change(selectCuisine);
 });
 
 // Functions
+
+function selectCuisine(){
+  //console.log($('select[name="cuisine"]').val());
+  if ($('select[name="cuisine"]').val() === "select"){
+    populateTable();
+  } else {
+    var tableContent = '';
+    // jquery AJAX call for JSON
+    $.getJSON('/users/userlist', function (data){
+      // adds all recipe info from database to the global variable
+      recipeListData = data;
+
+      // for each item in our JSON, add a table row and cells to the content string
+      $.each(data, function(){
+        if (this.cuisine === $('select[name="cuisine"]').val()){
+          tableContent += '<tr>';
+          tableContent += '<td><input type="checkbox" id="' + this.name.replace(/\s+/g, '_') + 'Checkbox" class="recipeCheckbox"></td>';
+          tableContent += '<td><a href="#" class="linkshowuser" rel="' + this.name + '">' + this.name + '</a></td>';
+          tableContent += '<td>' + this.cuisine + '</td>';
+          tableContent += '</tr>';
+        }
+      });
+
+      // inject the whole content string into our existing HTML table
+      $('#recipeList table tbody').html(tableContent);
+    });
+  }
+}
+
+
+
+// Adds blank lines for use in the grocery list
+function addlSpace(input) {
+  var oneLine = "__________________________________" + "<br>";
+  var manyLines = "";
+  for (var i = 0; i < input; i++) {
+    manyLines += oneLine;
+  }
+  return manyLines;
+}
+
+// Retrieves info from grocery list for easier printing
+function groceryCats(){
+  var groceryInfo = "";
+  var groceryCats = ['Meats', 'Veggies', 'Spices', 'Condiments', 'Dry', 'Other' ];
+  groceryCats.forEach(function(cat){
+    groceryInfo += '<strong>' + cat + '</strong>' + $('#grocery' + cat).html() + addlSpace(4);
+  });
+  return groceryInfo;
+}
+
+// printList needs to show menu plan & ingredients plus grocery list of ingredients
+// all in new window for easy printing
+function printList(){
+  var win = window.open();
+  win.document.write('<html><head><title>Grocery List</title><link rel="stylesheet" type="text/css" href="/public/stylesheets/style.css"><link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></head><body>');
+  var printMenuPlan = "<div id='print-menu-plan'>" + '<strong>Menu Plan</strong>' + $('#menu-plan').html() + addlSpace(4) + "</div>";
+  var printGroceryList = "<div id='print-grocery-list'><strong>Grocery List</strong>" + "<br>" + groceryCats() + "</div>";
+  win.document.write(printMenuPlan);
+  win.document.write(printGroceryList);
+  win.document.write('</body></html>');
+}
+
+
 
 function populateTable(){
 
   //empty content string
   var tableContent = '';
+  // empty array to store all of our cuisine types
+  var cuisines = [];
+  // empty string to eventually store our select cuisine menu data
+  var cuisineContent = '';
 
   // jquery AJAX call for JSON
   $.getJSON('/users/userlist', function (data){
 
-    // adds all user info from database to the global variable
+    // adds all recipe info from database to the global variable
     recipeListData = data;
 
     // for each item in our JSON, add a table row and cells to the content string
@@ -37,11 +112,25 @@ function populateTable(){
     });
 
     // inject the whole content string into our existing HTML table
-
-    // need different data outputs on home and newrecipe pages
-    // easiest to make two js files and call the appropriate one on each page?
     $('#recipeList table tbody').html(tableContent);
-    $('#newRecipeList table tbody').html(tableContent);
+
+    // create cuisine array to populate the select cuisine menu
+    $.each(data, function(i){
+      if (cuisines.indexOf(this.cuisine)=== -1) {
+        cuisines.push(this.cuisine);
+      }
+    });
+
+    (function(){
+      cuisineContent += '<option value="select" selected>Select Cuisine</option>';
+      cuisines.forEach(function(item){
+        cuisineContent += '<option value="' + item +'">' + item + "</option>";
+      });
+      //menuContent += '</select>';
+    })();
+
+    $('#cuisine-select select').html(cuisineContent);
+
   });
 
 };
@@ -102,6 +191,8 @@ function showRecipeInfo(event) {
 
     //Populate Info Box
     $('#recipeName').text(thisRecipeObject.name);
+    $('#recipePicture').html('<img src=' + thisRecipeObject.picture + '>');
+    $('#recipeDescription').text(thisRecipeObject.description);
     // $('#groceryMeats').append(ingredientList(thisRecipeObject.meats));
 
 };
