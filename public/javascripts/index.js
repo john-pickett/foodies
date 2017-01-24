@@ -1,7 +1,6 @@
 // Recipe list data array for filling in info box
 var recipeListData = [];
 
-
 // DOM Ready
 $(document).ready(function(){
 
@@ -78,8 +77,10 @@ function groceryCats(){
 function printList(){
   var win = window.open();
   win.document.write('<html><head><title>Grocery List</title><link rel="stylesheet" type="text/css" href="/public/stylesheets/style.css"><link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></head><body>');
-  var printMenuPlan = "<div id='print-menu-plan'>" + '<strong>Menu Plan</strong>' + $('#menu-plan').html() + addlSpace(4) + "</div>";
+  var printCoverPage = "<div id='print-cover-page'><strong>Weekly Menu Plan</strong></div>"
+  var printMenuPlan = "<div id='print-recipe-pages'>" + '<strong>Recipes and Instructions</strong>' + $('#menu-plan').html() + addlSpace(4) + "</div>";
   var printGroceryList = "<div id='print-grocery-list'><strong>Grocery List</strong>" + "<br>" + groceryCats() + "</div>";
+  win.document.write(printCoverPage);
   win.document.write(printMenuPlan);
   win.document.write(printGroceryList);
   win.document.write('</body></html>');
@@ -193,6 +194,7 @@ function showRecipeInfo(event) {
     $('#recipeName').text(thisRecipeObject.name);
     $('#recipePicture').html('<img src=' + thisRecipeObject.picture + '>');
     $('#recipeDescription').text(thisRecipeObject.description);
+    $('#recipeRating').text(thisRecipeObject.rating);
     // $('#groceryMeats').append(ingredientList(thisRecipeObject.meats));
 
 };

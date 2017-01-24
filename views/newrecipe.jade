@@ -23,7 +23,7 @@ html
                       input#inputName(type='text', placeholder='Recipe Name')
                       input#inputCuisine(type='text', placeholder='Cuisine')
                       br
-                      input#inputDescription(type='text', placeholder='Description')
+                      input#inputRating(type='text', placeholder='Rating')
                       input#inputPicture(type='text', placeholder='Picture URL')
                       br
                       input#inputMeat1(type='text', placeholder='Meat 1')
@@ -62,6 +62,11 @@ html
                       input#inputOther3(type='text', placeholder='Other 3')
                       input#inputOther4(type='text', placeholder='Other 4')
                       br
+                      input#inputTags(type='text', placeholder='Tags for Recipe', size='42')
+                      br
+                      textarea#inputDescription(type='text', placeholder='Description', class='textbox')
+                      textarea#inputRecipeText(type='text', placeholder='Recipe', class='textbox')
+
                       button#btnAddRecipe Add Recipe
                 #editRecipePanel
                   h2 Edit Recipe
@@ -70,7 +75,7 @@ html
                       input#editName(type='text', placeholder='Recipe Name')
                       input#editCuisine(type='text', placeholder='Cuisine')
                       br
-                      input#editDescription(type='text', placeholder='Description')
+                      input#editRating(type='text' placeholder='Rating')
                       input#editPicture(type='text', placeholder='Picture URL')
                       br
                       input#editMeat1(type='text', placeholder='Meat 1')
@@ -109,6 +114,10 @@ html
                       input#editOther3(type='text', placeholder='Other 3')
                       input#editOther4(type='text', placeholder='Other 4')
                       br
+                      input#editTags(type='text', placeholder='Tags for Recipe', size='42')
+                      br
+                      textarea#editDescription(type='text', placeholder='Description', class='textbox')
+                      textarea#editRecipeText(type='text', placeholder='Recipe', class='textbox')
                       button#btnUpdateRecipe Update Recipe
                       button#btnCancelEditRecipe Cancel Edit
               .col-md-4

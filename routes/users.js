@@ -21,7 +21,12 @@ router.post('/adduser', function(req, res) {
       spices: req.body.spices,
       condiments: req.body.condiments,
       dry: req.body.dry,
-      other: req.body.other
+      other: req.body.other,
+      description: req.body.description,
+      rating: req.body.rating,
+      recipe: req.body.recipe,
+      tags: req.body.tags,
+      picture: req.body.picture
     };
     var collection = db.get('recipes');
     collection.insert(recipe, function(err, result){
@@ -35,9 +40,24 @@ router.post('/adduser', function(req, res) {
 router.put('/updaterecipe/:id', function(req, res){
   var db = req.db;
   var collection = db.get('recipes');
-  var recipeToUpdate = req.params.id;
-  var doc = { $set: req.body };
-  collection.update({ '_id': recipeToUpdate }, doc, function(err){
+  var recipeId = req.params.id;
+  var doc = { $set: {
+    name: req.body.name,
+    cuisine: req.body.cuisine,
+    meats: req.body.meats,
+    veggies: req.body.veggies,
+    spices: req.body.spices,
+    condiments: req.body.condiments,
+    dry: req.body.dry,
+    other: req.body.other,
+    description: req.body.description,
+    rating: req.body.rating,
+    recipe: req.body.recipe,
+    tags: req.body.tags,
+    picture: req.body.picture
+  }};
+  //var doc = { $set: req.body };
+  collection.update({ '_id': recipeId }, doc, function(err){
     res.send((err === null) ? {msg: '' } : { msg:'error: ' + err });
   });
 });

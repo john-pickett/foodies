@@ -100,5 +100,19 @@ fieldset {
 }
 
 #cuisine-select{
-  float: right;
+
+}
+
+.textbox {
+  width: 304px;
+  height: 75px;
+}
+
+@media print {
+  #print-menu-plan{
+    column-count: 3;
+  }
+  #print-grocery-list{
+    column-count: 3;
+  }
 }
