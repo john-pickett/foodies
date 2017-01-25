@@ -77,13 +77,14 @@ function groceryCats(){
 function printList(){
   var win = window.open();
   win.document.write('<html><head><title>Grocery List</title><link rel="stylesheet" type="text/css" href="/public/stylesheets/style.css"><link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></head><body>');
-  var printCoverPage = "<div id='print-cover-page'><strong>Weekly Menu Plan</strong></div>"
+  var printCoverPage = "<div id='print-cover-page'><strong>Weekly Menu Plan</strong>" + $('#cover-page').html() + "</div>"
   var printMenuPlan = "<div id='print-recipe-pages'>" + '<strong>Recipes and Instructions</strong>' + $('#menu-plan').html() + addlSpace(4) + "</div>";
   var printGroceryList = "<div id='print-grocery-list'><strong>Grocery List</strong>" + "<br>" + groceryCats() + "</div>";
   win.document.write(printCoverPage);
   win.document.write(printMenuPlan);
   win.document.write(printGroceryList);
-  win.document.write('</body></html>');
+  //win.document.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><script src="/public/javascripts/print.js"></script></body></html>');
+  win.document.write('<script src="/public/javascripts/print.js"></script></body></html>');
 }
 
 
@@ -149,13 +150,12 @@ var ingredientList = function(list) {
 function selectRecipe() {
 
     var thisRecipeId = $(this).attr('id'); // this gets the #id from the checkbox: e.g.,LarbCheckbox, Chicken_TacosCheckbox
-
     var thisRecipeClass = thisRecipeId.replace('Checkbox', ''); // this strips out Checkbox: eg, Larb, Chicken_Tacos
     var thisRecipeName = thisRecipeClass.replace(/[_]/g, ' '); // this replaces _ with a space: eg, Larb, Chicken Tacos
     var arrayPosition = recipeListData.map(function(arrayItem) {return arrayItem.name; }).indexOf(thisRecipeName);
     var thisRecipeObject = recipeListData[arrayPosition];
 
-    // Populate or remove from grocery list
+    // Add or remove from Grocery List, Menu Plan
     if ($('#' + thisRecipeId).is(':checked')) {
       $('#groceryMeats').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.meats));
       $('#groceryVeggies').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.veggies));
@@ -163,16 +163,38 @@ function selectRecipe() {
       $('#groceryCondiments').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.condiments));
       $('#groceryDry').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.dry));
       $('#groceryOther').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.other));
+      $('#menu-plan').append("<div class=" + thisRecipeClass + ">" + thisRecipeName);
+      $('#cover-page').append("<div class=" +  thisRecipeClass + "><p><strong>" + thisRecipeName + "</strong>");
+      $('#cover-page').append("<div class=" + thisRecipeClass + ">" + thisRecipeObject.description + "</p>");
+      // $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.meats));
+      // $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.veggies));
+      // $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.spices));
+      // $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.condiments));
+      // $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.dry));
+      // $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.other));
     } else {
       $('.' + thisRecipeClass).remove();
     }
 
     // Add or remove recipe from Menu Plan
-    if ($('#' + thisRecipeId).is(':checked')) {
-      $('#menu-plan').append("<div class=" + thisRecipeClass + ">" + thisRecipeName);
-    } else {
-      $('.' + thisRecipeClass).remove();
-    }
+    // if ($('#' + thisRecipeId).is(':checked')) {
+    //   $('#menu-plan').append("<div class=" + thisRecipeClass + ">" + thisRecipeName);
+    //   $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.meats));
+    //   $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.veggies));
+    //   $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.spices));
+    //   $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.condiments));
+    //   $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.dry));
+    //   $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.other));
+    // } else {
+    //   $('.' + thisRecipeClass).remove();
+    // }
+
+    // Add or remove from Cover Page
+    // if ($('#' + thisRecipeId).is(':checked')) {
+    //   $('#cover-page').append("div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.meats));
+    // } else {
+    //
+    // }
 };
 
 // Show Recipe Info

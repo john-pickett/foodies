@@ -108,6 +108,10 @@ fieldset {
   height: 75px;
 }
 
+#cover-page {
+  display: none;
+}
+
 @media print {
   #print-menu-plan{
     column-count: 3;
