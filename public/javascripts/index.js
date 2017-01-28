@@ -1,5 +1,6 @@
 // Recipe list data array for filling in info box
 var recipeListData = [];
+var selectedRecipes = [];
 
 // DOM Ready
 $(document).ready(function(){
@@ -13,15 +14,19 @@ $(document).ready(function(){
   // Select Recipe Checkbox click
   $('#recipeList table tbody').on('click', 'td .recipeCheckbox', selectRecipe);
 
+  // Select all Recipes
+  $('#selectAll').on('click', selectAllRecipes);
+
   // Print Grocery List
   $('#btnPrintList').on('click', printList);
 
-  // Select Cuisine function
+  // Select Cuisine function - which recipes are displayed in the table
   $('#cuisine-select').change(selectCuisine);
 });
 
 // Functions
 
+// Allows the user to select which recipes are displayed in the table by cuisine
 function selectCuisine(){
   //console.log($('select[name="cuisine"]').val());
   if ($('select[name="cuisine"]').val() === "select"){
@@ -37,7 +42,11 @@ function selectCuisine(){
       $.each(data, function(){
         if (this.cuisine === $('select[name="cuisine"]').val()){
           tableContent += '<tr>';
-          tableContent += '<td><input type="checkbox" id="' + this.name.replace(/\s+/g, '_') + 'Checkbox" class="recipeCheckbox"></td>';
+          if (selectedRecipes.indexOf(this.name) === -1) {
+            tableContent += '<td><input type="checkbox" id="' + this.name.replace(/\s+/g, '_') + 'Checkbox" class="recipeCheckbox"></td>';
+          } else {
+            tableContent += '<td><input type="checkbox" id="' + this.name.replace(/\s+/g, '_') + 'Checkbox" class="recipeCheckbox" checked></td>';
+          }
           tableContent += '<td><a href="#" class="linkshowuser" rel="' + this.name + '">' + this.name + '</a></td>';
           tableContent += '<td>' + this.cuisine + '</td>';
           tableContent += '</tr>';
@@ -50,8 +59,6 @@ function selectCuisine(){
   }
 }
 
-
-
 // Adds blank lines for use in the grocery list
 function addlSpace(input) {
   var oneLine = "__________________________________" + "<br>";
@@ -62,14 +69,31 @@ function addlSpace(input) {
   return manyLines;
 }
 
-// Retrieves info from grocery list for easier printing
-function groceryCats(){
-  var groceryInfo = "";
-  var groceryCats = ['Meats', 'Veggies', 'Spices', 'Condiments', 'Dry', 'Other' ];
-  groceryCats.forEach(function(cat){
-    groceryInfo += '<strong>' + cat + '</strong>' + $('#grocery' + cat).html() + addlSpace(4);
+// Creates grocery list text for the printed pages using selectedRecipes array
+function printGroceryList(selectedRecipes, recipeListData){
+  var groceryString = "";
+  var meatGroceries = [];
+  var veggieGroceries = [];
+  var dryGroceries = [];
+  var spiceGroceries = [];
+  var condimentGroceries = [];
+  var otherGroceries = [];
+
+  selectedRecipes.forEach(function(item){
+    var arrayPosition = recipeListData.map(function(arrayItem) {return arrayItem.name;}).indexOf(item);
+    var thisRecipeObject = recipeListData[arrayPosition];
+    meatGroceries.push(ingredientList(thisRecipeObject.meats));
+    veggieGroceries.push(ingredientList(thisRecipeObject.veggies));
+    dryGroceries.push(ingredientList(thisRecipeObject.dry));
+    spiceGroceries.push(ingredientList(thisRecipeObject.spices));
+    condimentGroceries.push(ingredientList(thisRecipeObject.condiments));
+    otherGroceries.push(ingredientList(thisRecipeObject.other));
   });
-  return groceryInfo;
+  groceryString += "<strong>Meats</strong><br>" + meatGroceries + addlSpace(4) + "<strong>Veggies</strong><br>" + veggieGroceries + addlSpace(4) + "<strong>Dry Goods</strong><br>" + dryGroceries
+    + addlSpace(4) + "<strong>Spices</strong><br>" + spiceGroceries + addlSpace(4) + "<strong>Condiments</strong><br>" + condimentGroceries + addlSpace(4) + "<strong>Other</strong><br>" + otherGroceries;
+  groceryString = groceryString.replace(/,/g, '');
+  groceryString = groceryString.replace(/None/g, ''); // this still leaves a blank line in the printed list =(
+  return groceryString;
 }
 
 // printList needs to show menu plan & ingredients plus grocery list of ingredients
@@ -77,17 +101,47 @@ function groceryCats(){
 function printList(){
   var win = window.open();
   win.document.write('<html><head><title>Grocery List</title><link rel="stylesheet" type="text/css" href="/public/stylesheets/style.css"><link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></head><body>');
-  var printCoverPage = "<div id='print-cover-page'><strong>Weekly Menu Plan</strong>" + $('#cover-page').html() + "</div>"
-  var printMenuPlan = "<div id='print-recipe-pages'>" + '<strong>Recipes and Instructions</strong>' + $('#menu-plan').html() + addlSpace(4) + "</div>";
-  var printGroceryList = "<div id='print-grocery-list'><strong>Grocery List</strong>" + "<br>" + groceryCats() + "</div>";
-  win.document.write(printCoverPage);
-  win.document.write(printMenuPlan);
-  win.document.write(printGroceryList);
-  //win.document.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><script src="/public/javascripts/print.js"></script></body></html>');
+  var printedCoverPage = "<div id='print-cover-page'><h2>Weekly Menu Plan</h2>" + printCoverPage(selectedRecipes, recipeListData) + "</div>";
+  var printedMenuPlan = "<div id='print-recipe-pages'><h2>Recipes and Instructions</h2>" + printRecipePages(selectedRecipes, recipeListData) + "</div>";
+  var printedGroceryList = "<div id='print-grocery-list'><h2>Grocery List</h2>" + "<br>" + printGroceryList(selectedRecipes, recipeListData) + "</div>";
+  win.document.write(printedCoverPage);
+  win.document.write(printedMenuPlan);
+  win.document.write(printedGroceryList);
   win.document.write('<script src="/public/javascripts/print.js"></script></body></html>');
 }
 
+// this creates the text for the cover page of the printed material using the selectedRecipes array
+function printCoverPage(selectedRecipes, recipeListData) {
+  var coverString = "";
+  selectedRecipes.forEach(function(item){
+    var arrayPosition = recipeListData.map(function(arrayItem) {return arrayItem.name;}).indexOf(item);
+    var thisRecipeObject = recipeListData[arrayPosition];
+    coverString += "<h4>" + thisRecipeObject.name + "</h4>";
+    coverString += "<p>" + thisRecipeObject.description + "</p>";
+  })
+  return coverString;
+}
 
+// this function creates the text for the printed recipe pages using the selectedRecipes array
+function printRecipePages(selectedRecipes, recipeListData){
+  var recipeString = "";
+  selectedRecipes.forEach(function(item){
+    var arrayPosition = recipeListData.map(function(arrayItem) {return arrayItem.name;}).indexOf(item);
+    var thisRecipeObject = recipeListData[arrayPosition];
+    // recipe name
+    recipeString += "<div class='print-full-recipe'><div class='print-recipe-pages-name'><h4>" + thisRecipeObject.name + "</h4></div>";
+    // ingredients
+    recipeString += "<div class='print-recipe-pages-ingredients'>" + ingredientList(thisRecipeObject.meats);
+    recipeString += ingredientList(thisRecipeObject.veggies);
+    recipeString += ingredientList(thisRecipeObject.spices);
+    recipeString += ingredientList(thisRecipeObject.condiments);
+    recipeString += ingredientList(thisRecipeObject.dry);
+    recipeString += ingredientList(thisRecipeObject.other) + "</div>";
+    // recipe text
+    recipeString += "<div class='print-recipe-pages-recipe'>" + thisRecipeObject.recipe + "</div></div>";
+  });
+  return recipeString;
+}
 
 function populateTable(){
 
@@ -103,11 +157,16 @@ function populateTable(){
 
     // adds all recipe info from database to the global variable
     recipeListData = data;
+    $('#recipe-list-data').text(JSON.stringify(recipeListData));
 
     // for each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
       tableContent += '<tr>';
-      tableContent += '<td><input type="checkbox" id="' + this.name.replace(/\s+/g, '_') + 'Checkbox" class="recipeCheckbox"></td>';
+      if (selectedRecipes.indexOf(this.name) === -1) {
+        tableContent += '<td><input type="checkbox" id="' + this.name.replace(/\s+/g, '_') + 'Checkbox" class="recipeCheckbox"></td>';
+      } else {
+        tableContent += '<td><input type="checkbox" id="' + this.name.replace(/\s+/g, '_') + 'Checkbox" class="recipeCheckbox" checked></td>';
+      }
       tableContent += '<td><a href="#" class="linkshowuser" rel="' + this.name + '">' + this.name + '</a></td>';
       tableContent += '<td>' + this.cuisine + '</td>';
       tableContent += '</tr>';
@@ -146,9 +205,21 @@ var ingredientList = function(list) {
   return ingredients;
 };
 
+
+// Lets user select all visible recipes to add to grocery list and menu plan
+function selectAllRecipes(){
+  $.each($('.recipeCheckbox'), (function(i, item){
+    $(item).click();
+  }));
+}
+
+// function to remove unselected recipes from selectedRecipes array
+var splicer = function (arr, target) {
+  arr.splice(arr.indexOf(target), 1);
+};
+
 // Select recipe and add to grocery list and menu plan
 function selectRecipe() {
-
     var thisRecipeId = $(this).attr('id'); // this gets the #id from the checkbox: e.g.,LarbCheckbox, Chicken_TacosCheckbox
     var thisRecipeClass = thisRecipeId.replace('Checkbox', ''); // this strips out Checkbox: eg, Larb, Chicken_Tacos
     var thisRecipeName = thisRecipeClass.replace(/[_]/g, ' '); // this replaces _ with a space: eg, Larb, Chicken Tacos
@@ -157,44 +228,10 @@ function selectRecipe() {
 
     // Add or remove from Grocery List, Menu Plan
     if ($('#' + thisRecipeId).is(':checked')) {
-      $('#groceryMeats').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.meats));
-      $('#groceryVeggies').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.veggies));
-      $('#grocerySpices').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.spices));
-      $('#groceryCondiments').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.condiments));
-      $('#groceryDry').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.dry));
-      $('#groceryOther').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.other));
-      $('#menu-plan').append("<div class=" + thisRecipeClass + ">" + thisRecipeName);
-      $('#cover-page').append("<div class=" +  thisRecipeClass + "><p><strong>" + thisRecipeName + "</strong>");
-      $('#cover-page').append("<div class=" + thisRecipeClass + ">" + thisRecipeObject.description + "</p>");
-      // $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.meats));
-      // $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.veggies));
-      // $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.spices));
-      // $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.condiments));
-      // $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.dry));
-      // $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.other));
+      selectedRecipes.push(thisRecipeName);
     } else {
-      $('.' + thisRecipeClass).remove();
+      splicer(selectedRecipes, thisRecipeName);
     }
-
-    // Add or remove recipe from Menu Plan
-    // if ($('#' + thisRecipeId).is(':checked')) {
-    //   $('#menu-plan').append("<div class=" + thisRecipeClass + ">" + thisRecipeName);
-    //   $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.meats));
-    //   $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.veggies));
-    //   $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.spices));
-    //   $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.condiments));
-    //   $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.dry));
-    //   $('#cover-page').append("<div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.other));
-    // } else {
-    //   $('.' + thisRecipeClass).remove();
-    // }
-
-    // Add or remove from Cover Page
-    // if ($('#' + thisRecipeId).is(':checked')) {
-    //   $('#cover-page').append("div class=" +  thisRecipeClass + ">" + ingredientList(thisRecipeObject.meats));
-    // } else {
-    //
-    // }
 };
 
 // Show Recipe Info
@@ -217,6 +254,4 @@ function showRecipeInfo(event) {
     $('#recipePicture').html('<img src=' + thisRecipeObject.picture + '>');
     $('#recipeDescription').text(thisRecipeObject.description);
     $('#recipeRating').text(thisRecipeObject.rating);
-    // $('#groceryMeats').append(ingredientList(thisRecipeObject.meats));
-
 };

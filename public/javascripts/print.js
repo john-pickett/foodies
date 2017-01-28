@@ -1,17 +1,7 @@
-// DOM Ready
-
-// $(document).ready(function(){
-//   console.log("Heyo!");
-// });
-
-// No jquery document ready
-// window.onload = function() {
-//   console.log("Heyo!");
-// }
+// Print the page when it's loaded
 
 window.onload = printPage();
 
 function printPage() {
-  console.log("Hello this is printPage");
   window.print();
 };

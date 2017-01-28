@@ -99,8 +99,8 @@ fieldset {
   display: none;
 }
 
-#cuisine-select{
-
+#grocery-list {
+  display: none;
 }
 
 .textbox {
@@ -112,11 +112,41 @@ fieldset {
   display: none;
 }
 
+#recipe-pages{
+  /*display: none;*/
+}
+
 @media print {
-  #print-menu-plan{
-    column-count: 3;
+  #print-cover-page{
+    column-count: 1;
+    text-align: center;
+    padding: 10px;
+    page-break-after: always;
   }
+  #print-cover-page p {
+    text-align: left;
+  }
+  #print-recipe-pages{
+    padding: 10px;
+    text-align: left;
+    page-break-after: always;
+  }
+    .print-full-recipe{
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
+    .print-recipe-pages-name{
+      padding: 10px;
+    }
+    .print-recipe-pages-ingredients{
+      column-count: 2;
+      padding: 10px;
+    }
+    .print-recipe-pages-recipe{
+      padding: 10px;
+    }
   #print-grocery-list{
     column-count: 3;
+    padding: 10px;
   }
 }
