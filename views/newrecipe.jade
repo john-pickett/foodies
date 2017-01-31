@@ -4,131 +4,89 @@ html
     title= title
     link(rel='stylesheet', href='/public/stylesheets/style.css')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
-
-    body
-      block content
-        // Wrapper
-        #wrapper
-          .container-fluid
-            .navbar
-              ul
-                li <a href="/">Home </a> |
-                li <a href="/newrecipe"> Add New Recipe </a>
-            .row
-              .col-md-4
-                #addRecipePanel
-                  h2 Add New Recipe
-                  #addRecipe
-                    fieldset
-                      input#inputName(type='text', placeholder='Recipe Name')
-                      input#inputCuisine(type='text', placeholder='Cuisine')
-                      br
-                      input#inputRating(type='text', placeholder='Rating')
-                      input#inputPicture(type='text', placeholder='Picture URL')
-                      br
-                      input#inputMeat1(type='text', placeholder='Meat 1')
-                      input#inputMeat2(type='text', placeholder='Meat 2')
-                      br
-                      input#inputMeat3(type='text', placeholder='Meat 3')
-                      input#inputMeat4(type='text', placeholder='Meat 4')
-                      br
-                      input#inputVeggies1(type='text', placeholder='Veggies 1')
-                      input#inputVeggies2(type='text', placeholder='Veggies 2')
-                      br
-                      input#inputVeggies3(type='text', placeholder='Veggies 3')
-                      input#inputVeggies4(type='text', placeholder='Veggies 4')
-                      br
-                      input#inputSpices1(type='text', placeholder='Spices 1')
-                      input#inputSpices2(type='text', placeholder='Spices 2')
-                      br
-                      input#inputSpices3(type='text', placeholder='Spices 3')
-                      input#inputSpices4(type='text', placeholder='Spices 4')
-                      br
-                      input#inputCondiments1(type='text', placeholder='Condiments 1')
-                      input#inputCondiments2(type='text', placeholder='Condiments 2')
-                      br
-                      input#inputCondiments3(type='text', placeholder='Condiments 3')
-                      input#inputCondiments4(type='text', placeholder='Condiments 4')
-                      br
-                      input#inputDry1(type='text', placeholder='Dry Goods 1')
-                      input#inputDry2(type='text', placeholder='Dry Goods 2')
-                      br
-                      input#inputDry3(type='text', placeholder='Dry Goods 3')
-                      input#inputDry4(type='text', placeholder='Dry Goods 4')
-                      br
-                      input#inputOther1(type='text', placeholder='Other 1')
-                      input#inputOther2(type='text', placeholder='Other 2')
-                      br
-                      input#inputOther3(type='text', placeholder='Other 3')
-                      input#inputOther4(type='text', placeholder='Other 4')
-                      br
-                      input#inputTags(type='text', placeholder='Tags for Recipe', size='42')
-                      br
-                      textarea#inputDescription(type='text', placeholder='Description', class='textbox')
-                      textarea#inputRecipeText(type='text', placeholder='Recipe', class='textbox')
-
-                      button#btnAddRecipe Add Recipe
-                #editRecipePanel
-                  h2 Edit Recipe
-                  #editRecipe
-                    fieldset
-                      input#editName(type='text', placeholder='Recipe Name')
-                      input#editCuisine(type='text', placeholder='Cuisine')
-                      br
-                      input#editRating(type='text' placeholder='Rating')
-                      input#editPicture(type='text', placeholder='Picture URL')
-                      br
-                      input#editMeat1(type='text', placeholder='Meat 1')
-                      input#editMeat2(type='text', placeholder='Meat 2')
-                      br
-                      input#editMeat3(type='text', placeholder='Meat 3')
-                      input#editMeat4(type='text', placeholder='Meat 4')
-                      br
-                      input#editVeggies1(type='text', placeholder='Veggies 1')
-                      input#editVeggies2(type='text', placeholder='Veggies 2')
-                      br
-                      input#editVeggies3(type='text', placeholder='Veggies 3')
-                      input#editVeggies4(type='text', placeholder='Veggies 4')
-                      br
-                      input#editSpices1(type='text', placeholder='Spices 1')
-                      input#editSpices2(type='text', placeholder='Spices 2')
-                      br
-                      input#editSpices3(type='text', placeholder='Spices 3')
-                      input#editSpices4(type='text', placeholder='Spices 4')
-                      br
-                      input#editCondiments1(type='text', placeholder='Condiments 1')
-                      input#editCondiments2(type='text', placeholder='Condiments 2')
-                      br
-                      input#editCondiments3(type='text', placeholder='Condiments 3')
-                      input#editCondiments4(type='text', placeholder='Condiments 4')
-                      br
-                      input#editDry1(type='text', placeholder='Dry Goods 1')
-                      input#editDry2(type='text', placeholder='Dry Goods 2')
-                      br
-                      input#editDry3(type='text', placeholder='Dry Goods 3')
-                      input#editDry4(type='text', placeholder='Dry Goods 4')
-                      br
-                      input#editOther1(type='text', placeholder='Other 1')
-                      input#editOther2(type='text', placeholder='Other 2')
-                      br
-                      input#editOther3(type='text', placeholder='Other 3')
-                      input#editOther4(type='text', placeholder='Other 4')
-                      br
-                      input#editTags(type='text', placeholder='Tags for Recipe', size='42')
-                      br
-                      textarea#editDescription(type='text', placeholder='Description', class='textbox')
-                      textarea#editRecipeText(type='text', placeholder='Recipe', class='textbox')
-                      button#btnUpdateRecipe Update Recipe
-                      button#btnCancelEditRecipe Cancel Edit
-              .col-md-4
-                h2 View Recipe Details
-                #newRecipeList
-                  table
-                    thead
-                      th Recipe
-                      th Cuisine
-                      th Update / Delete
-                    tbody
+  body
+    div.navbar.navbar-fixed-top
+      .navbar
+        ul
+          li <a href="/">Home </a> |
+          li <a href="/newrecipe"> Add New Recipe </a>
+    // Wrapper
+    #wrapper
+      .row
+        .col-md-4
+          .addRecipePanel
+            h2 Add New Recipe
+          .editRecipePanel
+            h2 Edit Recipe
+          .addRecipePanel
+            .addRecipe
+              fieldset
+                input#inputName(type='text', placeholder='Recipe Name')
+                input#inputCuisine(type='text', placeholder='Cuisine')
+                br
+                input#inputRating(type='text', placeholder='Rating')
+                input#inputPicture(type='text', placeholder='Picture URL')
+                br
+                input#inputServing(type='text', placeholder='Serving Size', size='42')
+                br
+                input#inputTags(type='text', placeholder='Tags for Recipe', size='42')
+                br
+                textarea#inputMeats(type='text', placeholder='Meat Ingredients', class='textbox')
+                br
+                textarea#inputVeggies(type='text', placeholder='Veggie Ingredients', class='textbox')
+                br
+                textarea#inputSpices(type='text', placeholder='Spice Ingredients', class='textbox')
+                textarea#inputCondiments(type='text', placeholder='Condiment Ingredients', class='textbox')
+          .editRecipePanel
+            .editRecipe
+              fieldset
+                input#editName(type='text', placeholder='Recipe Name')
+                input#editCuisine(type='text', placeholder='Cuisine')
+                br
+                input#editRating(type='text' placeholder='Rating')
+                input#editPicture(type='text', placeholder='Picture URL')
+                br
+                input#editServing(type='text', placeholder='Serving Size', size='42')
+                br
+                input#editTags(type='text', placeholder='Tags for Recipe', size='42')
+                br
+                textarea#editMeats(type='text', placeholder='Meat Ingredients', class='textbox')
+                br
+                textarea#editVeggies(type='text', placeholder='Veggie Ingredients', class='textbox')
+                br
+                textarea#editSpices(type='text', placeholder='Spice Ingredients', class='textbox')
+                textarea#editCondiments(type='text', placeholder='Condiment Ingredients', class='textbox')
+        .col-md-4
+          .second-col
+            .addRecipePanel
+              .addRecipe
+                fieldset
+                  textarea#inputDry(type='text', placeholder='Dry Goods Ingredients', class='textbox')
+                  textarea#inputOther(type='text', placeholder='Other Ingredients', class='textbox')
+                  textarea#inputCompanion(type='text', placeholder='Companion Recipe', class='textbox')
+                  textarea#inputDescription(type='text', placeholder='Description', class='textbox')
+                  textarea#inputRecipeText(type='text', placeholder='Recipe', class='textbox')
+                  p
+                    button#btnAddRecipe Add Recipe
+            .editRecipePanel
+              .editRecipe
+                fieldset
+                  textarea#editDry(type='text', placeholder='Dry Goods Ingredients', class='textbox')
+                  textarea#editOther(type='text', placeholder='Other Ingredients', class='textbox')
+                  textarea#editCompanion(type='text', placeholder='Companion Recipe', class='textbox')
+                  textarea#editDescription(type='text', placeholder='Description', class='textbox')
+                  textarea#editRecipeText(type='text', placeholder='Recipe', class='textbox')
+                  button#btnUpdateRecipe Update Recipe
+                  button#btnCancelEditRecipe Cancel Edit
+        .col-md-4
+          h2 View Recipe Details
+          #newRecipeList
+            table
+              thead
+                th Recipe
+                th Cuisine
+                th <a href="#" class="editToggle">Edit</a>/ <a href="#" class="editToggle">Delete</a>
+              tbody
 
 
         script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')

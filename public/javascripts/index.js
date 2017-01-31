@@ -25,127 +25,9 @@ $(document).ready(function(){
 });
 
 // Functions
-
-// Allows the user to select which recipes are displayed in the table by cuisine
-function selectCuisine(){
-  //console.log($('select[name="cuisine"]').val());
-  if ($('select[name="cuisine"]').val() === "select"){
-    populateTable();
-  } else {
-    var tableContent = '';
-    // jquery AJAX call for JSON
-    $.getJSON('/users/userlist', function (data){
-      // adds all recipe info from database to the global variable
-      recipeListData = data;
-
-      // for each item in our JSON, add a table row and cells to the content string
-      $.each(data, function(){
-        if (this.cuisine === $('select[name="cuisine"]').val()){
-          tableContent += '<tr>';
-          if (selectedRecipes.indexOf(this.name) === -1) {
-            tableContent += '<td><input type="checkbox" id="' + this.name.replace(/\s+/g, '_') + 'Checkbox" class="recipeCheckbox"></td>';
-          } else {
-            tableContent += '<td><input type="checkbox" id="' + this.name.replace(/\s+/g, '_') + 'Checkbox" class="recipeCheckbox" checked></td>';
-          }
-          tableContent += '<td><a href="#" class="linkshowuser" rel="' + this.name + '">' + this.name + '</a></td>';
-          tableContent += '<td>' + this.cuisine + '</td>';
-          tableContent += '</tr>';
-        }
-      });
-
-      // inject the whole content string into our existing HTML table
-      $('#recipeList table tbody').html(tableContent);
-    });
-  }
-}
-
-// Adds blank lines for use in the grocery list
-function addlSpace(input) {
-  var oneLine = "__________________________________" + "<br>";
-  var manyLines = "";
-  for (var i = 0; i < input; i++) {
-    manyLines += oneLine;
-  }
-  return manyLines;
-}
-
-// Creates grocery list text for the printed pages using selectedRecipes array
-function printGroceryList(selectedRecipes, recipeListData){
-  var groceryString = "";
-  var meatGroceries = [];
-  var veggieGroceries = [];
-  var dryGroceries = [];
-  var spiceGroceries = [];
-  var condimentGroceries = [];
-  var otherGroceries = [];
-
-  selectedRecipes.forEach(function(item){
-    var arrayPosition = recipeListData.map(function(arrayItem) {return arrayItem.name;}).indexOf(item);
-    var thisRecipeObject = recipeListData[arrayPosition];
-    meatGroceries.push(ingredientList(thisRecipeObject.meats));
-    veggieGroceries.push(ingredientList(thisRecipeObject.veggies));
-    dryGroceries.push(ingredientList(thisRecipeObject.dry));
-    spiceGroceries.push(ingredientList(thisRecipeObject.spices));
-    condimentGroceries.push(ingredientList(thisRecipeObject.condiments));
-    otherGroceries.push(ingredientList(thisRecipeObject.other));
-  });
-  groceryString += "<strong>Meats</strong><br>" + meatGroceries + addlSpace(4) + "<strong>Veggies</strong><br>" + veggieGroceries + addlSpace(4) + "<strong>Dry Goods</strong><br>" + dryGroceries
-    + addlSpace(4) + "<strong>Spices</strong><br>" + spiceGroceries + addlSpace(4) + "<strong>Condiments</strong><br>" + condimentGroceries + addlSpace(4) + "<strong>Other</strong><br>" + otherGroceries;
-  groceryString = groceryString.replace(/,/g, '');
-  groceryString = groceryString.replace(/None/g, ''); // this still leaves a blank line in the printed list =(
-  return groceryString;
-}
-
-// printList needs to show menu plan & ingredients plus grocery list of ingredients
-// all in new window for easy printing
-function printList(){
-  var win = window.open();
-  win.document.write('<html><head><title>Grocery List</title><link rel="stylesheet" type="text/css" href="/public/stylesheets/style.css"><link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></head><body>');
-  var printedCoverPage = "<div id='print-cover-page'><h2>Weekly Menu Plan</h2>" + printCoverPage(selectedRecipes, recipeListData) + "</div>";
-  var printedMenuPlan = "<div id='print-recipe-pages'><h2>Recipes and Instructions</h2>" + printRecipePages(selectedRecipes, recipeListData) + "</div>";
-  var printedGroceryList = "<div id='print-grocery-list'><h2>Grocery List</h2>" + "<br>" + printGroceryList(selectedRecipes, recipeListData) + "</div>";
-  win.document.write(printedCoverPage);
-  win.document.write(printedMenuPlan);
-  win.document.write(printedGroceryList);
-  win.document.write('<script src="/public/javascripts/print.js"></script></body></html>');
-}
-
-// this creates the text for the cover page of the printed material using the selectedRecipes array
-function printCoverPage(selectedRecipes, recipeListData) {
-  var coverString = "";
-  selectedRecipes.forEach(function(item){
-    var arrayPosition = recipeListData.map(function(arrayItem) {return arrayItem.name;}).indexOf(item);
-    var thisRecipeObject = recipeListData[arrayPosition];
-    coverString += "<h4>" + thisRecipeObject.name + "</h4>";
-    coverString += "<p>" + thisRecipeObject.description + "</p>";
-  })
-  return coverString;
-}
-
-// this function creates the text for the printed recipe pages using the selectedRecipes array
-function printRecipePages(selectedRecipes, recipeListData){
-  var recipeString = "";
-  selectedRecipes.forEach(function(item){
-    var arrayPosition = recipeListData.map(function(arrayItem) {return arrayItem.name;}).indexOf(item);
-    var thisRecipeObject = recipeListData[arrayPosition];
-    // recipe name
-    recipeString += "<div class='print-full-recipe'><div class='print-recipe-pages-name'><h4>" + thisRecipeObject.name + "</h4></div>";
-    // ingredients
-    recipeString += "<div class='print-recipe-pages-ingredients'>" + ingredientList(thisRecipeObject.meats);
-    recipeString += ingredientList(thisRecipeObject.veggies);
-    recipeString += ingredientList(thisRecipeObject.spices);
-    recipeString += ingredientList(thisRecipeObject.condiments);
-    recipeString += ingredientList(thisRecipeObject.dry);
-    recipeString += ingredientList(thisRecipeObject.other) + "</div>";
-    // recipe text
-    recipeString += "<div class='print-recipe-pages-recipe'>" + thisRecipeObject.recipe + "</div></div>";
-  });
-  return recipeString;
-}
+// all functions for manipulating the page and selecting recipes are first. then all functions for priting the menu and list
 
 function populateTable(){
-
-  //empty content string
   var tableContent = '';
   // empty array to store all of our cuisine types
   var cuisines = [];
@@ -153,7 +35,7 @@ function populateTable(){
   var cuisineContent = '';
 
   // jquery AJAX call for JSON
-  $.getJSON('/users/userlist', function (data){
+  $.getJSON('/recipes/recipelist', function (data){
 
     // adds all recipe info from database to the global variable
     recipeListData = data;
@@ -191,26 +73,40 @@ function populateTable(){
     })();
 
     $('#cuisine-select select').html(cuisineContent);
-
   });
-
 };
 
-// Gets a clean list of ingredients from thisRecipeObject for use in selectRecipe()
-var ingredientList = function(list) {
-  var ingredients = "";
-  for (var key in list){
-    ingredients += list[key] + "<br>";
+// Allows the user to select which recipes are displayed in the table by cuisine
+function selectCuisine(){
+  //console.log($('select[name="cuisine"]').val());
+  if ($('select[name="cuisine"]').val() === "select"){
+    populateTable();
+  } else {
+    var tableContent = '';
+    // jquery AJAX call for JSON
+    $.getJSON('/recipes/recipelist', function (data){
+      // adds all recipe info from database to the global variable
+      recipeListData = data;
+
+      // for each item in our JSON, add a table row and cells to the content string
+      $.each(data, function(){
+        if (this.cuisine === $('select[name="cuisine"]').val()){
+          tableContent += '<tr>';
+          if (selectedRecipes.indexOf(this.name) === -1) {
+            tableContent += '<td><input type="checkbox" id="' + this.name.replace(/\s+/g, '_') + 'Checkbox" class="recipeCheckbox"></td>';
+          } else {
+            tableContent += '<td><input type="checkbox" id="' + this.name.replace(/\s+/g, '_') + 'Checkbox" class="recipeCheckbox" checked></td>';
+          }
+          tableContent += '<td><a href="#" class="linkshowuser" rel="' + this.name + '">' + this.name + '</a></td>';
+          tableContent += '<td>' + this.cuisine + '</td>';
+          tableContent += '</tr>';
+        }
+      });
+
+      // inject the whole content string into our existing HTML table
+      $('#recipeList table tbody').html(tableContent);
+    });
   }
-  return ingredients;
-};
-
-
-// Lets user select all visible recipes to add to grocery list and menu plan
-function selectAllRecipes(){
-  $.each($('.recipeCheckbox'), (function(i, item){
-    $(item).click();
-  }));
 }
 
 // function to remove unselected recipes from selectedRecipes array
@@ -234,6 +130,13 @@ function selectRecipe() {
     }
 };
 
+// Lets user select all visible recipes to add to grocery list and menu plan
+function selectAllRecipes(){
+  $.each($('.recipeCheckbox'), (function(i, item){
+    $(item).click();
+  }));
+}
+
 // Show Recipe Info
 function showRecipeInfo(event) {
 
@@ -254,4 +157,99 @@ function showRecipeInfo(event) {
     $('#recipePicture').html('<img src=' + thisRecipeObject.picture + '>');
     $('#recipeDescription').text(thisRecipeObject.description);
     $('#recipeRating').text(thisRecipeObject.rating);
+};
+
+// beginning of Printing Menu and List functions
+
+// printList needs to show menu plan & ingredients plus grocery list of ingredients
+// all in new window for easy printing
+function printList(){
+  var win = window.open();
+  win.document.write('<html><head><title>Grocery List</title><link rel="stylesheet" type="text/css" href="/public/stylesheets/style.css"><link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></head><body>');
+  var printedCoverPage = "<div id='print-cover-page'><h2>Weekly Menu Plan</h2>" + printCoverPage(selectedRecipes, recipeListData) + "</div>";
+  var printedMenuPlan = "<div id='print-recipe-pages'><h2>Recipes and Instructions</h2>" + printRecipePages(selectedRecipes, recipeListData) + "</div>";
+  var printedGroceryList = "<div id='print-grocery-list'><h2>Grocery List</h2>" + "<br>" + printGroceryList(selectedRecipes, recipeListData) + "</div>";
+  win.document.write(printedCoverPage);
+  win.document.write(printedMenuPlan);
+  win.document.write(printedGroceryList);
+  win.document.write('<script src="/public/javascripts/print.js"></script></body></html>');
+}
+
+// this creates the text for the cover page of the printed material using the selectedRecipes array
+function printCoverPage(selectedRecipes, recipeListData) {
+  var coverString = "";
+  selectedRecipes.forEach(function(item){
+    var arrayPosition = recipeListData.map(function(arrayItem) {return arrayItem.name;}).indexOf(item);
+    var thisRecipeObject = recipeListData[arrayPosition];
+    coverString += "<h4>" + thisRecipeObject.name + "</h4>";
+    coverString += "<p>" + thisRecipeObject.description + "</p>";
+  })
+  return coverString;
+}
+
+// this function creates the text for the printed recipe pages using the selectedRecipes array
+function printRecipePages(selectedRecipes, recipeListData){
+  var recipeString = "";
+  selectedRecipes.forEach(function(item){
+    var arrayPosition = recipeListData.map(function(arrayItem) {return arrayItem.name;}).indexOf(item);
+    var thisRecipeObject = recipeListData[arrayPosition];
+    // recipe name
+    recipeString += "<div class='print-full-recipe'><div class='print-recipe-pages-name'><h4>" + thisRecipeObject.name + "</h4></div>";
+    // ingredients
+    recipeString += "<div class='print-recipe-pages-ingredients'>" + ingredientList(thisRecipeObject.ingredients.meats);
+    recipeString += ingredientList(thisRecipeObject.ingredients.veggies);
+    recipeString += ingredientList(thisRecipeObject.ingredients.spices);
+    recipeString += ingredientList(thisRecipeObject.ingredients.condiments);
+    recipeString += ingredientList(thisRecipeObject.ingredients.dry);
+    recipeString += ingredientList(thisRecipeObject.ingredients.other) + "</div>";
+    // recipe text
+    recipeString += "<div class='print-recipe-pages-recipe'>" + thisRecipeObject.recipe + "</div></div>";
+  });
+  return recipeString;
+}
+
+// Creates grocery list text for the printed pages using selectedRecipes array
+function printGroceryList(selectedRecipes, recipeListData){
+  var groceryString = "";
+  var meatGroceries = [];
+  var veggieGroceries = [];
+  var dryGroceries = [];
+  var spiceGroceries = [];
+  var condimentGroceries = [];
+  var otherGroceries = [];
+
+  selectedRecipes.forEach(function(item){
+    var arrayPosition = recipeListData.map(function(arrayItem) {return arrayItem.name;}).indexOf(item);
+    var thisRecipeObject = recipeListData[arrayPosition];
+    meatGroceries.push(ingredientList(thisRecipeObject.ingredients.meats));
+    veggieGroceries.push(ingredientList(thisRecipeObject.ingredients.veggies));
+    dryGroceries.push(ingredientList(thisRecipeObject.ingredients.dry));
+    spiceGroceries.push(ingredientList(thisRecipeObject.ingredients.spices));
+    condimentGroceries.push(ingredientList(thisRecipeObject.ingredients.condiments));
+    otherGroceries.push(ingredientList(thisRecipeObject.ingredients.other));
+  });
+  groceryString += "<strong>Meats</strong><br>" + meatGroceries + addlSpace(4) + "<strong>Veggies</strong><br>" + veggieGroceries + addlSpace(4) + "<strong>Dry Goods</strong><br>" + dryGroceries
+    + addlSpace(4) + "<strong>Spices</strong><br>" + spiceGroceries + addlSpace(4) + "<strong>Condiments</strong><br>" + condimentGroceries + addlSpace(4) + "<strong>Other</strong><br>" + otherGroceries;
+  groceryString = groceryString.replace(/,/g, '');
+  groceryString = groceryString.replace(/None/g, ''); // this still leaves a blank line in the printed list =(
+  return groceryString;
+}
+
+// Adds blank lines for use in the grocery list
+function addlSpace(input) {
+  var oneLine = "__________________________________" + "<br>";
+  var manyLines = "";
+  for (var i = 0; i < input; i++) {
+    manyLines += oneLine;
+  }
+  return manyLines;
+}
+
+// Gets a clean list of ingredients from thisRecipeObject for use in the printed pages
+var ingredientList = function(list) {
+  var ingredients = "";
+  for (var key in list){
+    ingredients += list[key] + "<br>";
+  }
+  return ingredients;
 };

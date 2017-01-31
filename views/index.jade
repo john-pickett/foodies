@@ -4,52 +4,47 @@ html
         title= title
         link(rel='stylesheet', href='/public/stylesheets/style.css')
         link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
-
     body
-        block content
-        // Wrapper
-        #wrapper
-          .container-fluid
-            .navbar
-              ul
-                li <a href="/">Home </a> |
-                li <a href="/newrecipe"> Add New Recipe </a>
-            // RECIPE LIST TABLE
-            .row
-              .col-md-4
-                h2 Recipe List
-                #recipeList
-                  #cuisine-select
-                    select(name="cuisine")
-                  table
-                    thead
-                      th Select <input type='checkbox' id='selectAll'>
-                      th Recipe
-                      th Cuisine
-                    tbody
-                  // /RECIPE LIST
-              // RECIPE DETAILS
-              .col-md-4
-                #recipeinfo
-                    h2 Recipe Details
-                    p
-                      strong Name
-                      p <span id='recipeName'></span>
-                      strong Description
-                      p <span id='recipePicture'></span>
-                      p <span id='recipeDescription'></span>
-                      strong Rating
-                      p <span id='recipeRating'></span>
-
-
-                    // /RECIPE INFO
-              // MENU PLAN
-              .col-md-4
-                h2 Menu Plan
-                #menu-plan
-                  button#btnPrintList Print Grocery List
-                // /MENU PLAN
-        // /WRAPPER
+      div.navbar.navbar-fixed-top
+        .navbar
+          ul
+            li <a href="/">Home </a> |
+            li <a href="/newrecipe"> Add New Recipe </a>
+      #wrapper
+        .container-fluid
+          // RECIPE LIST TABLE
+          .row
+            .col-md-4
+              h2 Recipe List
+              #recipeList
+                #cuisine-select
+                  select(name="cuisine")
+                table
+                  thead
+                    th Select <input type='checkbox' id='selectAll'>
+                    th Recipe
+                    th Cuisine
+                  tbody
+                // /RECIPE LIST
+            // RECIPE DETAILS
+            .col-md-4
+              #recipeinfo
+                  h2 Recipe Details
+                  p
+                    strong Name
+                    p <span id='recipeName'></span>
+                    strong Description
+                    p <span id='recipePicture'></span>
+                    p <span id='recipeDescription'></span>
+                    strong Rating
+                    p <span id='recipeRating'></span>
+                  // /RECIPE INFO
+            // MENU PLAN
+            .col-md-4
+              h2 Menu Plan
+              #menu-plan
+                button#btnPrintList Print Grocery List
+              // /MENU PLAN
         script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
         script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
         script(src='/public/javascripts/index.js')

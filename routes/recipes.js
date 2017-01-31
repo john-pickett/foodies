@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 // GET users listing
-router.get('/userlist', function(req, res) {
+router.get('/recipelist', function(req, res) {
     var db = req.db;
     var collection = db.get('recipes');
     collection.find({},{},function(e,docs){
@@ -11,22 +11,18 @@ router.get('/userlist', function(req, res) {
 });
 
 // Add new user
-router.post('/adduser', function(req, res) {
+router.post('/addrecipe', function(req, res) {
     var db = req.db;
     var recipe = {
       name: req.body.name,
       cuisine: req.body.cuisine,
-      meats: req.body.meats,
-      veggies: req.body.veggies,
-      spices: req.body.spices,
-      condiments: req.body.condiments,
-      dry: req.body.dry,
-      other: req.body.other,
       description: req.body.description,
       rating: req.body.rating,
       recipe: req.body.recipe,
+      serving: req.body.serving,
       tags: req.body.tags,
-      picture: req.body.picture
+      picture: req.body.picture,
+      ingredients: req.body.ingredients
     };
     var collection = db.get('recipes');
     collection.insert(recipe, function(err, result){
@@ -44,15 +40,11 @@ router.put('/updaterecipe/:id', function(req, res){
   var doc = { $set: {
     name: req.body.name,
     cuisine: req.body.cuisine,
-    meats: req.body.meats,
-    veggies: req.body.veggies,
-    spices: req.body.spices,
-    condiments: req.body.condiments,
-    dry: req.body.dry,
-    other: req.body.other,
+    ingredients: req.body.ingredients,
     description: req.body.description,
     rating: req.body.rating,
     recipe: req.body.recipe,
+    serving: req.body.serving,
     tags: req.body.tags,
     picture: req.body.picture
   }};
@@ -64,7 +56,7 @@ router.put('/updaterecipe/:id', function(req, res){
 
 
 // DELETE to deleteuser
-router.delete('/deleteuser/:id', function(req, res) {
+router.delete('/deleterecipe/:id', function(req, res) {
     var db = req.db;
     var collection = db.get('recipes');
     var userToDelete = req.params.id;

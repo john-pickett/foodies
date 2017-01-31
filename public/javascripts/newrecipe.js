@@ -14,7 +14,7 @@ $(document).ready(function(){
   $('#btnAddRecipe').on('click', addRecipe);
 
   // Delete Recipe link click
-  $('#newRecipeList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
+  $('#newRecipeList table tbody').on('click', 'td a.linkdeleteuser', deleteRecipe);
 
   // Select Recipe Checkbox click
   //$('#newRecipeList table tbody').on('click', 'td .recipeCheckbox', selectRecipe);
@@ -27,6 +27,9 @@ $(document).ready(function(){
 
   // Send updated recipe to database
   $('#btnUpdateRecipe').on('click', updateRecipe);
+
+  // Toggle Edit/Delete Options
+  $('#newRecipeList table thead').on('click', 'th a.editToggle', toggleDelete);
 });
 
 // Functions
@@ -37,7 +40,7 @@ function populateTable(){
   var tableContent = '';
 
   // jquery AJAX call for JSON
-  $.getJSON('/users/userlist', function (data){
+  $.getJSON('/recipes/recipelist', function (data){
 
     // adds all user info from database to the global variable
     recipeListData = data;
@@ -48,7 +51,7 @@ function populateTable(){
       //tableContent += '<td><a href="#" class="linkshowuser" rel="' + this.name + '">' + this.name + '</a></td>';
       tableContent += '<td>' + this.name + '</td>';
       tableContent += '<td>' + this.cuisine + '</td>';
-      tableContent += '<td><a href="#" class="linkdeleteuser" rel="' + this._id + '">delete</a> / <a href="#" class="linkedituser" rel="' + this._id + '">edit</a></td>';
+      tableContent += '<td><a href="#" style="color: white; background-color: red; padding: 2px;" class="linkdeleteuser deleterecipe" rel="' + this._id + '">Delete?</a> <a href="#" class="linkedituser editrecipe" rel="' + this._id + '">Edit</a></td>';
       tableContent += '</tr>';
     });
 
@@ -59,17 +62,25 @@ function populateTable(){
 
 };
 
+function toggleDelete(event) {
+  event.preventDefault();
+  $('.deleterecipe').toggle();
+  $('.editrecipe').toggle();
+}
+
 // This populates the edit recipe panel with the recipe's info
 function editRecipeInfo(event) {
   event.preventDefault();
 
-  if($('#addRecipePanel').is(':visible')) {
+  if($('.addRecipePanel').is(':visible')) {
     togglePanels();
   }
 
-  // clear inputs in Edit Recipe Panel
-  $('#addRecipe fieldset input').val('');
-  $('#addRecipe fieldset textarea').val('');
+  // clear any inputs in Add & Edit Recipe Panel
+  $('.addRecipe fieldset input').val('');
+  $('.addRecipe fieldset textarea').val('');
+  $('.editRecipe fieldset input').val('');
+  $('.editRecipe fieldset textarea').val('');
 
   var _id = $(this).attr('rel');
 
@@ -85,40 +96,24 @@ function editRecipeInfo(event) {
   $('#editPicture').val(thisRecipeObject.picture);
   $('#editRating').val(thisRecipeObject.rating);
   $('#editRecipeText').val(thisRecipeObject.recipe);
+  $('#editServing').val(thisRecipeObject.serving);
   $('#editTags').val(thisRecipeObject.tags);
-  $('#editMeat1').val(thisRecipeObject.meats.one);
-  $('#editMeat2').val(thisRecipeObject.meats.two);
-  $('#editMeat3').val(thisRecipeObject.meats.three);
-  $('#editMeat4').val(thisRecipeObject.meats.four);
-  $('#editVeggies1').val(thisRecipeObject.veggies.one);
-  $('#editVeggies2').val(thisRecipeObject.veggies.two);
-  $('#editVeggies3').val(thisRecipeObject.veggies.three);
-  $('#editVeggies4').val(thisRecipeObject.veggies.four);
-  $('#editSpices1').val(thisRecipeObject.spices.one);
-  $('#editSpices2').val(thisRecipeObject.spices.two);
-  $('#editSpices3').val(thisRecipeObject.spices.three);
-  $('#editSpices4').val(thisRecipeObject.spices.four);
-  $('#editCondiments1').val(thisRecipeObject.condiments.one);
-  $('#editCondiments2').val(thisRecipeObject.condiments.two);
-  $('#editCondiments3').val(thisRecipeObject.condiments.three);
-  $('#editCondiments4').val(thisRecipeObject.condiments.four);
-  $('#editDry1').val(thisRecipeObject.dry.one);
-  $('#editDry2').val(thisRecipeObject.dry.two);
-  $('#editDry3').val(thisRecipeObject.dry.three);
-  $('#editDry4').val(thisRecipeObject.dry.four);
-  $('#editOther1').val(thisRecipeObject.other.one);
-  $('#editOther2').val(thisRecipeObject.other.two);
-  $('#editOther3').val(thisRecipeObject.other.three);
-  $('#editOther4').val(thisRecipeObject.other.four);
+  $('#editMeats').val(ingredientList(thisRecipeObject.ingredients.meats));
+  $('#editVeggies').val(ingredientList(thisRecipeObject.ingredients.veggies));
+  $('#editSpices').val(ingredientList(thisRecipeObject.ingredients.spices));
+  $('#editCondiments').val(ingredientList(thisRecipeObject.ingredients.condiments));
+  $('#editDry').val(ingredientList(thisRecipeObject.ingredients.dry));
+  $('#editOther').val(ingredientList(thisRecipeObject.ingredients.other));
+  $('#editCompanion').val(ingredientList(thisRecipeObject.ingredients.companion));
 
-  $('#editRecipe').attr('rel', thisRecipeObject._id);
+  $('.editRecipe').attr('rel', thisRecipeObject._id);
 
 
 }; // end of editRecipeInfo function
 
 function togglePanels(){
-  $('#addRecipePanel').toggle();
-  $('#editRecipePanel').toggle();
+  $('.addRecipePanel').toggle();
+  $('.editRecipePanel').toggle();
 };
 
 // Gets list of ingredients from each object in database for use in selectRecipe()
@@ -149,58 +144,32 @@ function addRecipe(event) {
 
     // Compile all Recipe info into one object
     var newRecipe = {
-        'name': $('#addRecipePanel fieldset input#inputName').val(),
-        'cuisine': $('#addRecipePanel fieldset input#inputCuisine').val(),
-        'description': $('#addRecipePanel fieldset textarea#inputDescription').val(),
-        'picture': $('#addRecipePanel fieldset input#inputPicture').val(),
-        'rating': $('#addRecipePanel fieldset input#inputRating').val(),
-        'recipe': $('#addRecipePanel fieldset textarea#inputRecipeText').val(),
-        'tags': $('#addRecipePanel fieldset input#inputTags').val(),
-        'meats': {
-          'one': $('#addRecipePanel fieldset input#inputMeat1').val(),
-          'two': $('#addRecipePanel fieldset input#inputMeat2').val(),
-          'three': $('#addRecipePanel fieldset input#inputMeat3').val(),
-          'four': $('#addRecipePanel fieldset input#inputMeat4').val()
-        },
-        'veggies': {
-          'one': $('#addRecipePanel fieldset input#inputVeggies1').val(),
-          'two': $('#addRecipePanel fieldset input#inputVeggies2').val(),
-          'three': $('#addRecipePanel fieldset input#inputVeggies3').val(),
-          'four': $('#addRecipePanel fieldset input#inputVeggies4').val()
-        },
-        'spices': {
-          'one': $('#addRecipePanel fieldset input#inputSpices1').val(),
-          'two': $('#addRecipePanel fieldset input#inputSpices2').val(),
-          'three': $('#addRecipePanel fieldset input#inputSpices3').val(),
-          'four': $('#addRecipePanel fieldset input#inputSpices4').val()
-        },
-        'condiments': {
-          'one': $('#addRecipePanel fieldset input#inputCondiments1').val(),
-          'two': $('#addRecipePanel fieldset input#inputCondiments2').val(),
-          'three': $('#addRecipePanel fieldset input#inputCondiments3').val(),
-          'four': $('#addRecipePanel fieldset input#inputCondiments4').val()
-        },
-        'dry': {
-          'one': $('#addRecipePanel fieldset input#inputDry1').val(),
-          'two': $('#addRecipePanel fieldset input#inputDry2').val(),
-          'three': $('#addRecipePanel fieldset input#inputDry3').val(),
-          'four': $('#addRecipePanel fieldset input#inputDry4').val()
-        },
-        'other': {
-          'one': $('#addRecipePanel fieldset input#inputOther1').val(),
-          'two': $('#addRecipePanel fieldset input#inputOther2').val(),
-          'three': $('#addRecipePanel fieldset input#inputOther3').val(),
-          'four': $('#addRecipePanel fieldset input#inputOther4').val()
+        'name': $('.addRecipePanel fieldset input#inputName').val(),
+        'cuisine': $('.addRecipePanel fieldset input#inputCuisine').val(),
+        'description': $('.addRecipePanel fieldset textarea#inputDescription').val(),
+        'picture': $('.addRecipePanel fieldset input#inputPicture').val(),
+        'rating': $('.addRecipePanel fieldset input#inputRating').val(),
+        'recipe': $('.addRecipePanel fieldset textarea#inputRecipeText').val(),
+        'serving': $('.addRecipePanel fieldset input#inputServing').val(),
+        'tags': $('.addRecipePanel fieldset input#inputTags').val(),
+        'ingredients': {
+          'meats': [ $('.addRecipePanel fieldset textarea#inputMeats').val() ],
+          'veggies': [ $('.addRecipePanel fieldset textarea#inputVeggies').val() ],
+          'spices': [ $('.addRecipePanel fieldset textarea#inputSpices').val() ],
+          'condiments': [ $('.addRecipePanel fieldset textarea#inputCondiments').val() ],
+          'dry': [ $('.addRecipePanel fieldset textarea#inputDry').val() ],
+          'other': [ $('.addRecipePanel fieldset textarea#inputOther').val() ],
+          'companion': [ $('.addRecipePanel fieldset textarea#inputCompanion').val() ]
         }
       };
 
-     newRecipe = remover(newRecipe);
+     //newRecipe = remover(newRecipe);
 
         // Use AJAX to post the object to our addrecipe service
         $.ajax({
             type: 'POST',
             data: newRecipe,
-            url: '/users/adduser',
+            url: '/recipes/addrecipe',
             dataType: 'JSON'
         }).done(function( response ) {
 
@@ -208,11 +177,11 @@ function addRecipe(event) {
             if (response.msg === '') {
 
                 // Clear the form inputs
-                $('#addRecipe fieldset input').val('');
-                $('#addRecipe fieldset textarea').val('');
+                $('.addRecipe fieldset input').val('');
+                $('.addRecipe fieldset textarea').val('');
 
                 //show successful message
-                $('#addRecipe').append("<span class='textTimer'>Recipe was added successfully!</span>");
+                $('.addRecipe').append("<span class='textTimer'>Recipe was added successfully!</span>");
                 setTimeout( function(){
                   $('.textTimer').remove();
                 }, 2000);
@@ -232,69 +201,43 @@ function updateRecipe(event) {
 
   // Compile all Recipe info into one object
   var updatedRecipe = {
-      'name': $('#editRecipePanel fieldset input#editName').val(),
-      'cuisine': $('#editRecipePanel fieldset input#editCuisine').val(),
-      'description': $('#editRecipePanel fieldset textarea#editDescription').val(),
-      'picture': $('#editRecipePanel fieldset input#editPicture').val(),
-      'rating': $('#editRecipePanel fieldset input#editRating').val(),
-      'recipe': $('#editRecipePanel fieldset textarea#editRecipeText').val(),
-      'tags': $('#editRecipePanel fieldset input#editTags').val(),
-      'meats': {
-        'one': $('#editRecipePanel fieldset input#editMeat1').val(),
-        'two': $('#editRecipePanel fieldset input#editMeat2').val(),
-        'three': $('#editRecipePanel fieldset input#editMeat3').val(),
-        'four': $('#editRecipePanel fieldset input#editMeat4').val()
-      },
-      'veggies': {
-        'one': $('#editRecipePanel fieldset input#editVeggies1').val(),
-        'two': $('#editRecipePanel fieldset input#editVeggies2').val(),
-        'three': $('#editRecipePanel fieldset input#editVeggies3').val(),
-        'four': $('#editRecipePanel fieldset input#editVeggies4').val()
-      },
-      'spices': {
-        'one': $('#editRecipePanel fieldset input#editSpices1').val(),
-        'two': $('#editRecipePanel fieldset input#editSpices2').val(),
-        'three': $('#editRecipePanel fieldset input#editSpices3').val(),
-        'four': $('#editRecipePanel fieldset input#editSpices4').val()
-      },
-      'condiments': {
-        'one': $('#editRecipePanel fieldset input#editCondiments1').val(),
-        'two': $('#editRecipePanel fieldset input#editCondiments2').val(),
-        'three': $('#editRecipePanel fieldset input#editCondiments3').val(),
-        'four': $('#editRecipePanel fieldset input#editCondiments4').val()
-      },
-      'dry': {
-        'one': $('#editRecipePanel fieldset input#editDry1').val(),
-        'two': $('#editRecipePanel fieldset input#editDry2').val(),
-        'three': $('#editRecipePanel fieldset input#editDry3').val(),
-        'four': $('#editRecipePanel fieldset input#editDry4').val()
-      },
-      'other': {
-        'one': $('#editRecipePanel fieldset input#editOther1').val(),
-        'two': $('#editRecipePanel fieldset input#editOther2').val(),
-        'three': $('#editRecipePanel fieldset input#editOther3').val(),
-        'four': $('#editRecipePanel fieldset input#editOther4').val()
+      'name': $('.editRecipePanel fieldset input#editName').val(),
+      'cuisine': $('.editRecipePanel fieldset input#editCuisine').val(),
+      'description': $('.editRecipePanel fieldset textarea#editDescription').val(),
+      'picture': $('.editRecipePanel fieldset input#editPicture').val(),
+      'rating': $('.editRecipePanel fieldset input#editRating').val(),
+      'recipe': $('.editRecipePanel fieldset textarea#editRecipeText').val(),
+      'serving': $('.editRecipePanel fieldset input#editServing').val(),
+      'tags': $('.editRecipePanel fieldset input#editTags').val(),
+      'ingredients': {
+        'meats': [ $('.editRecipePanel fieldset textarea#editMeats').val() ],
+        'veggies': [ $('.editRecipePanel fieldset textarea#editVeggies').val() ],
+        'spices': [ $('.editRecipePanel fieldset textarea#editSpices').val() ],
+        'condiments': [ $('.editRecipePanel fieldset textarea#editCondiments').val() ],
+        'dry': [ $('.editRecipePanel fieldset textarea#editDry').val() ],
+        'other': [ $('.editRecipePanel fieldset textarea#editOther').val() ],
+        'companion': [ $('.editRecipePanel fieldset textarea#editCompanion').val() ],
       }
     };
 
-    updatedRecipe = remover(updatedRecipe);
+    //updatedRecipe = remover(updatedRecipe);
 
       // Use AJAX to post the object to our adduser service
       $.ajax({
           type: 'PUT',
           data: updatedRecipe,
-          url: '/users/updaterecipe/' + $('#editRecipe').attr('rel'),
+          url: '/recipes/updaterecipe/' + $('.editRecipe').attr('rel'),
           dataType: 'JSON'
       }).done(function( response ) {
           // Check for successful (blank) response
           if (response.msg === '') {
 
               // Clear the form inputs
-              $('#editRecipe fieldset input').val('');
-              $('#editRecipe fieldset textarea').val('');
+              $('.editRecipe fieldset input').val('');
+              $('.editRecipe fieldset textarea').val('');
 
               //show successful message
-              $('#editRecipe').append("<span class='textTimer'>Recipe was updated successfully!</span>");
+              $('.editRecipe').append("<span class='textTimer'>Recipe was updated successfully!</span>");
               setTimeout( function(){
                 $('.textTimer').remove();
               }, 2000);
@@ -312,7 +255,7 @@ function updateRecipe(event) {
   };
 
 // Delete Recipe
-function deleteUser(event) {
+function deleteRecipe(event) {
 
     event.preventDefault();
 
@@ -325,20 +268,20 @@ function deleteUser(event) {
         // If they did, do our delete
         $.ajax({
             type: 'DELETE',
-            url: '/users/deleteuser/' + $(this).attr('rel')
+            url: '/recipes/deleterecipe/' + $(this).attr('rel')
         }).done(function( response ) {
 
             // Check for a successful (blank) response
             if (response.msg === '') {
 
               //show successful message
-              if($('#addRecipePanel').is(':visible')) {
-                $('#addRecipe').append("<span class='textTimer'>Recipe was deleted successfully!</span>");
+              if($('.addRecipePanel').is(':visible')) {
+                $('.addRecipe').append("<span class='textTimer'>Recipe was deleted successfully!</span>");
                 setTimeout( function(){
                   $('.textTimer').remove();
                 }, 2000);
               } else {
-                $('#editRecipe').append("<span class='textTimer'>Recipe was deleted successfully!</span>");
+                $('.editRecipe').append("<span class='textTimer'>Recipe was deleted successfully!</span>");
                 setTimeout( function(){
                   $('.textTimer').remove();
               }, 2000);
@@ -363,47 +306,47 @@ function deleteUser(event) {
 
 };
 
-// Select recipe and add to grocery list
-// not needed on Add Recipe?
-function selectRecipe() {
-
-    var thisRecipeId = $(this).attr('id'); // this gets the #id from the checkbox: e.g.,LarbCheckbox, Chicken_TacosCheckbox
-
-    var thisRecipeClass = thisRecipeId.replace('Checkbox', ''); // this strips out Checkbox: eg, Larb, Chicken_Tacos
-    var thisRecipeName = thisRecipeClass.replace(/[_]/g, ' '); // this replaces _ with a space: eg, Larb, Chicken Tacos
-    var arrayPosition = recipeListData.map(function(arrayItem) {return arrayItem.name; }).indexOf(thisRecipeName);
-    var thisRecipeObject = recipeListData[arrayPosition];
-
-    // Populate or remove from grocery list
-    if ($('#' + thisRecipeId).is(':checked')) {
-      $('#groceryMeats').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.meats));
-      $('#groceryVeggies').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.veggies));
-      $('#grocerySpices').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.spices));
-      $('#groceryCondiments').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.condiments));
-      $('#groceryDry').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.dry));
-    } else {
-      $('.' + thisRecipeClass).remove();
-    }
-};
-
-// Show Recipe Info
-// not needed on Add Recipe?
-function showRecipeInfo(event) {
-
-    // Prevent Link from Firing
-    event.preventDefault();
-
-    // Retrieve recipe name from link rel attribute
-    var thisRecipeName = $(this).attr('rel');
-
-    // Get Index of object based on id value
-    var arrayPosition = recipeListData.map(function(arrayItem) { return arrayItem.name; }).indexOf(thisRecipeName);
-
-    // Get our Recipe Object
-    var thisRecipeObject = recipeListData[arrayPosition];
-
-    //Populate Info Box
-    $('#recipeName').text(thisRecipeObject.name);
-    // $('#groceryMeats').append(ingredientList(thisRecipeObject.meats));
-
-};
+// // Select recipe and add to grocery list
+// // not needed on Add Recipe?
+// function selectRecipe() {
+//
+//     var thisRecipeId = $(this).attr('id'); // this gets the #id from the checkbox: e.g.,LarbCheckbox, Chicken_TacosCheckbox
+//
+//     var thisRecipeClass = thisRecipeId.replace('Checkbox', ''); // this strips out Checkbox: eg, Larb, Chicken_Tacos
+//     var thisRecipeName = thisRecipeClass.replace(/[_]/g, ' '); // this replaces _ with a space: eg, Larb, Chicken Tacos
+//     var arrayPosition = recipeListData.map(function(arrayItem) {return arrayItem.name; }).indexOf(thisRecipeName);
+//     var thisRecipeObject = recipeListData[arrayPosition];
+//
+//     // Populate or remove from grocery list
+//     if ($('#' + thisRecipeId).is(':checked')) {
+//       $('#groceryMeats').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.meats));
+//       $('#groceryVeggies').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.veggies));
+//       $('#grocerySpices').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.spices));
+//       $('#groceryCondiments').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.condiments));
+//       $('#groceryDry').append("<div class=" + thisRecipeClass + ">" + ingredientList(thisRecipeObject.dry));
+//     } else {
+//       $('.' + thisRecipeClass).remove();
+//     }
+// };
+//
+// // Show Recipe Info
+// // not needed on Add Recipe?
+// function showRecipeInfo(event) {
+//
+//     // Prevent Link from Firing
+//     event.preventDefault();
+//
+//     // Retrieve recipe name from link rel attribute
+//     var thisRecipeName = $(this).attr('rel');
+//
+//     // Get Index of object based on id value
+//     var arrayPosition = recipeListData.map(function(arrayItem) { return arrayItem.name; }).indexOf(thisRecipeName);
+//
+//     // Get our Recipe Object
+//     var thisRecipeObject = recipeListData[arrayPosition];
+//
+//     //Populate Info Box
+//     $('#recipeName').text(thisRecipeObject.name);
+//     // $('#groceryMeats').append(ingredientList(thisRecipeObject.meats));
+//
+// };
