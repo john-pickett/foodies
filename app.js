@@ -11,6 +11,7 @@ var db = monk('mongodb://heroku_hbfk1244:fd6q30qjacbtv0d580bmms91p7@ds151068.mla
 
 var index = require('./routes/index');
 var recipes = require('./routes/recipes');
+//var newrecipe = require('./routes/newrecipe');
 
 var app = express();
 
@@ -35,6 +36,8 @@ app.use(function(req,res,next){
 
 app.use('/', index);
 app.use('/recipes', recipes);
+// app.use('/newrecipe', newrecipe);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

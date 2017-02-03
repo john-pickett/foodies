@@ -5,11 +5,12 @@ html
     link(rel='stylesheet', href='/public/stylesheets/style.css')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
   body
-    div.navbar.navbar-fixed-top
-      .navbar
-        ul
-          li <a href="/">Home </a> |
-          li <a href="/newrecipe"> Add New Recipe </a>
+    .navbar.navbar-default.navbar-fixed-top
+      .container
+        .navbar-header.navbar-right
+          ul.nav.navbar-nav
+            <li><a href="/">Home</a></li>
+            <li><a href="/newrecipe">Add & Edit Recipes</a></li>
     // Wrapper
     #wrapper
       .row
@@ -18,6 +19,7 @@ html
             h2 Add New Recipe
           .editRecipePanel
             h2 Edit Recipe
+          button#btnClear Clear All
           .addRecipePanel
             .addRecipe
               fieldset
@@ -37,6 +39,12 @@ html
                 br
                 textarea#inputSpices(type='text', placeholder='Spice Ingredients', class='textbox')
                 textarea#inputCondiments(type='text', placeholder='Condiment Ingredients', class='textbox')
+                textarea#inputDry(type='text', placeholder='Dry Goods Ingredients', class='textbox')
+                textarea#inputOther(type='text', placeholder='Other Ingredients', class='textbox')
+                textarea#inputDescription(type='text', placeholder='Recipe Description', class='textbox')
+                textarea#inputRecipeText(type='text', placeholder='Recipe Instructions', class='textbox')
+                p
+                  button#btnAddRecipe Add Recipe
           .editRecipePanel
             .editRecipe
               fieldset
@@ -56,28 +64,35 @@ html
                 br
                 textarea#editSpices(type='text', placeholder='Spice Ingredients', class='textbox')
                 textarea#editCondiments(type='text', placeholder='Condiment Ingredients', class='textbox')
+                textarea#editDry(type='text', placeholder='Dry Goods Ingredients', class='textbox')
+                textarea#editOther(type='text', placeholder='Other Ingredients', class='textbox')
+                textarea#editDescription(type='text', placeholder='Recipe Description', class='textbox')
+                textarea#editRecipeText(type='text', placeholder='Recipe Instructions', class='textbox')
+                br
+                button#btnUpdateRecipe Update Recipe
+                button#btnCancelEditRecipe Cancel Edit
         .col-md-4
-          .second-col
-            .addRecipePanel
-              .addRecipe
-                fieldset
-                  textarea#inputDry(type='text', placeholder='Dry Goods Ingredients', class='textbox')
-                  textarea#inputOther(type='text', placeholder='Other Ingredients', class='textbox')
-                  textarea#inputCompanion(type='text', placeholder='Companion Recipe', class='textbox')
-                  textarea#inputDescription(type='text', placeholder='Description', class='textbox')
-                  textarea#inputRecipeText(type='text', placeholder='Recipe', class='textbox')
-                  p
-                    button#btnAddRecipe Add Recipe
-            .editRecipePanel
-              .editRecipe
-                fieldset
-                  textarea#editDry(type='text', placeholder='Dry Goods Ingredients', class='textbox')
-                  textarea#editOther(type='text', placeholder='Other Ingredients', class='textbox')
-                  textarea#editCompanion(type='text', placeholder='Companion Recipe', class='textbox')
-                  textarea#editDescription(type='text', placeholder='Description', class='textbox')
-                  textarea#editRecipeText(type='text', placeholder='Recipe', class='textbox')
-                  button#btnUpdateRecipe Update Recipe
-                  button#btnCancelEditRecipe Cancel Edit
+          h2 Companion Recipe
+          .addRecipePanel
+            .addRecipe
+              fieldset
+                textarea#inputCompanion(type='text', placeholder='Companion Recipe Name', class='textbox')
+                textarea#inputCompanionMeats(type='text', placeholder='Companion Meats', class='textbox')
+                textarea#inputCompanionVeggies(type='text', placeholder='Companion Veggies', class='textbox')
+                textarea#inputCompanionSpices(type='text', placeholder='Companion Spices', class='textbox')
+                textarea#inputCompanionCondiments(type='text', placeholder='Companion Condiments', class='textbox')
+                textarea#inputCompanionDry(type='text', placeholder='Companion Dry Goods', class='textbox')
+                textarea#inputCompanionOther(type='text', placeholder='Companion Other', class='textbox')
+          .editRecipePanel
+            .editRecipe
+              fieldset
+                textarea#editCompanion(type='text', placeholder='Companion Recipe Name', class='textbox')
+                textarea#editCompanionMeats(type='text', placeholder='Companion Meats', class='textbox')
+                textarea#editCompanionVeggies(type='text', placeholder='Companion Veggies', class='textbox')
+                textarea#editCompanionSpices(type='text', placeholder='Companion Spices', class='textbox')
+                textarea#editCompanionCondiments(type='text', placeholder='Companion Condiments', class='textbox')
+                textarea#editCompanionDry(type='text', placeholder='Companion Dry Goods', class='textbox')
+                textarea#editCompanionOther(type='text', placeholder='Companion Other', class='textbox')
         .col-md-4
           h2 View Recipe Details
           #newRecipeList

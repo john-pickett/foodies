@@ -22,7 +22,9 @@ router.post('/addrecipe', function(req, res) {
       serving: req.body.serving,
       tags: req.body.tags,
       picture: req.body.picture,
-      ingredients: req.body.ingredients
+      ingredients: req.body.ingredients,
+      companionname: req.body.companionname,
+      companion: req.body.companion
     };
     var collection = db.get('recipes');
     collection.insert(recipe, function(err, result){
@@ -46,7 +48,9 @@ router.put('/updaterecipe/:id', function(req, res){
     recipe: req.body.recipe,
     serving: req.body.serving,
     tags: req.body.tags,
-    picture: req.body.picture
+    picture: req.body.picture,
+    companionname: req.body.companionname,
+    companion: req.body.companion
   }};
   //var doc = { $set: req.body };
   collection.update({ '_id': recipeId }, doc, function(err){

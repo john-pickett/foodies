@@ -22,6 +22,9 @@ $(document).ready(function(){
 
   // Select Cuisine function - which recipes are displayed in the table
   $('#cuisine-select').change(selectCuisine);
+
+  // Search function
+  $('#btnSearch').on('click', searchRecipes);
 });
 
 // Functions
@@ -39,11 +42,12 @@ function populateTable(){
 
     // adds all recipe info from database to the global variable
     recipeListData = data;
-    $('#recipe-list-data').text(JSON.stringify(recipeListData));
 
     // for each item in our JSON, add a table row and cells to the content string
     $.each(data, function(){
       tableContent += '<tr>';
+      // this checks the global selectedRecipes to see if the recipe has been selected already
+      // if it has, it puts it in the table with a checked checkbox
       if (selectedRecipes.indexOf(this.name) === -1) {
         tableContent += '<td><input type="checkbox" id="' + this.name.replace(/\s+/g, '_') + 'Checkbox" class="recipeCheckbox"></td>';
       } else {
@@ -64,8 +68,9 @@ function populateTable(){
       }
     });
 
+    // this function populates the Select Cuisine menu with all of the cuisines from the global recipeListData
     (function(){
-      cuisineContent += '<option value="select" selected>Select Cuisine</option>';
+      cuisineContent += '<option value="select" selected>All Cuisines</option>';
       cuisines.forEach(function(item){
         cuisineContent += '<option value="' + item +'">' + item + "</option>";
       });
@@ -109,6 +114,32 @@ function selectCuisine(){
   }
 }
 
+function searchRecipes() {
+  if ($('#search').val() === "") {
+    populateTable();
+  } else {
+    var input = $('#search').val();
+    var tableContent = '';
+    $.getJSON('/recipes/recipelist', function (data){
+      recipeListData = data;
+      $.each(data, function(){
+        if (this.name.indexOf(input) > -1){
+          tableContent += '<tr>';
+          if (selectedRecipes.indexOf(this.name) === -1) {
+              tableContent += '<td><input type="checkbox" id="' + this.name.replace(/\s+/g, '_') + 'Checkbox" class="recipeCheckbox"></td>';
+            } else {
+              tableContent += '<td><input type="checkbox" id="' + this.name.replace(/\s+/g, '_') + 'Checkbox" class="recipeCheckbox" checked></td>';
+            }
+          tableContent += '<td><a href="#" class="linkshowuser" rel="' + this.name + '">' + this.name + '</a></td>';
+          tableContent += '<td>' + this.cuisine + '</td>';
+          tableContent += '</tr>';
+        }
+      });
+      $('#recipeList table tbody').html(tableContent);
+    });
+  }
+}
+
 // function to remove unselected recipes from selectedRecipes array
 var splicer = function (arr, target) {
   arr.splice(arr.indexOf(target), 1);
@@ -125,8 +156,13 @@ function selectRecipe() {
     // Add or remove from Grocery List, Menu Plan
     if ($('#' + thisRecipeId).is(':checked')) {
       selectedRecipes.push(thisRecipeName);
+      $('#menu-plan').append('<p class="' + thisRecipeClass + '">' + thisRecipeName + '</p>');
+      if (!$('#selected-meals').is(':visible')) {
+        $('#selected-meals').toggle();
+      }
     } else {
       splicer(selectedRecipes, thisRecipeName);
+      $('.' + thisRecipeClass).remove();
     }
 };
 
@@ -154,9 +190,14 @@ function showRecipeInfo(event) {
 
     //Populate Info Box
     $('#recipeName').text(thisRecipeObject.name);
-    $('#recipePicture').html('<img src=' + thisRecipeObject.picture + '>');
+    //$('#recipePicture').html('<img src=' + thisRecipeObject.picture + '>');
     $('#recipeDescription').text(thisRecipeObject.description);
     $('#recipeRating').text(thisRecipeObject.rating);
+    var requiredIngredients = ingredientPlucker(thisRecipeObject.ingredients) + "<br><strong>" + thisRecipeObject.companionname + "</strong></br>" + ingredientPlucker(thisRecipeObject.companion);
+    // $('#recipeIngredients').html(ingredientPlucker(thisRecipeObject.ingredients));
+    // $('#recipeIngredients').html(thisRecipeObject.companionname);
+    // $('#recipeIngredients').html(ingredientPlucker(thisRecipeObject.companion));
+    $('#recipeIngredients').html(requiredIngredients);
 };
 
 // beginning of Printing Menu and List functions
@@ -167,10 +208,10 @@ function printList(){
   var win = window.open();
   win.document.write('<html><head><title>Grocery List</title><link rel="stylesheet" type="text/css" href="/public/stylesheets/style.css"><link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></head><body>');
   var printedCoverPage = "<div id='print-cover-page'><h2>Weekly Menu Plan</h2>" + printCoverPage(selectedRecipes, recipeListData) + "</div>";
-  var printedMenuPlan = "<div id='print-recipe-pages'><h2>Recipes and Instructions</h2>" + printRecipePages(selectedRecipes, recipeListData) + "</div>";
+  var printedRecipePages = "<div id='print-recipe-pages'><h2>Recipes and Instructions</h2>" + printRecipePages(selectedRecipes, recipeListData) + "</div>";
   var printedGroceryList = "<div id='print-grocery-list'><h2>Grocery List</h2>" + "<br>" + printGroceryList(selectedRecipes, recipeListData) + "</div>";
   win.document.write(printedCoverPage);
-  win.document.write(printedMenuPlan);
+  win.document.write(printedRecipePages);
   win.document.write(printedGroceryList);
   win.document.write('<script src="/public/javascripts/print.js"></script></body></html>');
 }
@@ -196,12 +237,11 @@ function printRecipePages(selectedRecipes, recipeListData){
     // recipe name
     recipeString += "<div class='print-full-recipe'><div class='print-recipe-pages-name'><h4>" + thisRecipeObject.name + "</h4></div>";
     // ingredients
-    recipeString += "<div class='print-recipe-pages-ingredients'>" + ingredientList(thisRecipeObject.ingredients.meats);
-    recipeString += ingredientList(thisRecipeObject.ingredients.veggies);
-    recipeString += ingredientList(thisRecipeObject.ingredients.spices);
-    recipeString += ingredientList(thisRecipeObject.ingredients.condiments);
-    recipeString += ingredientList(thisRecipeObject.ingredients.dry);
-    recipeString += ingredientList(thisRecipeObject.ingredients.other) + "</div>";
+    recipeString += "<div class='print-recipe-pages-ingredients'>"
+    recipeString += ingredientPlucker(thisRecipeObject.ingredients);
+    recipeString += "<br><strong>" + thisRecipeObject.companionname + "</strong><br>";
+    recipeString += ingredientPlucker(thisRecipeObject.companion);
+    recipeString += "</div>";
     // recipe text
     recipeString += "<div class='print-recipe-pages-recipe'>" + thisRecipeObject.recipe + "</div></div>";
   });
@@ -221,12 +261,18 @@ function printGroceryList(selectedRecipes, recipeListData){
   selectedRecipes.forEach(function(item){
     var arrayPosition = recipeListData.map(function(arrayItem) {return arrayItem.name;}).indexOf(item);
     var thisRecipeObject = recipeListData[arrayPosition];
-    meatGroceries.push(ingredientList(thisRecipeObject.ingredients.meats));
-    veggieGroceries.push(ingredientList(thisRecipeObject.ingredients.veggies));
-    dryGroceries.push(ingredientList(thisRecipeObject.ingredients.dry));
-    spiceGroceries.push(ingredientList(thisRecipeObject.ingredients.spices));
-    condimentGroceries.push(ingredientList(thisRecipeObject.ingredients.condiments));
-    otherGroceries.push(ingredientList(thisRecipeObject.ingredients.other));
+    meatGroceries.push(categoryIngredientPlucker(thisRecipeObject.ingredients.meats));
+    meatGroceries.push(categoryIngredientPlucker(thisRecipeObject.companion.meats));
+    veggieGroceries.push(categoryIngredientPlucker(thisRecipeObject.ingredients.veggies));
+    veggieGroceries.push(categoryIngredientPlucker(thisRecipeObject.companion.veggies));
+    dryGroceries.push(categoryIngredientPlucker(thisRecipeObject.ingredients.dry));
+    dryGroceries.push(categoryIngredientPlucker(thisRecipeObject.companion.dry));
+    spiceGroceries.push(categoryIngredientPlucker(thisRecipeObject.ingredients.spices));
+    spiceGroceries.push(categoryIngredientPlucker(thisRecipeObject.companion.spices));
+    condimentGroceries.push(categoryIngredientPlucker(thisRecipeObject.ingredients.condiments));
+    condimentGroceries.push(categoryIngredientPlucker(thisRecipeObject.companion.condiments));
+    otherGroceries.push(categoryIngredientPlucker(thisRecipeObject.ingredients.other));
+    otherGroceries.push(categoryIngredientPlucker(thisRecipeObject.companion.other));
   });
   groceryString += "<strong>Meats</strong><br>" + meatGroceries + addlSpace(4) + "<strong>Veggies</strong><br>" + veggieGroceries + addlSpace(4) + "<strong>Dry Goods</strong><br>" + dryGroceries
     + addlSpace(4) + "<strong>Spices</strong><br>" + spiceGroceries + addlSpace(4) + "<strong>Condiments</strong><br>" + condimentGroceries + addlSpace(4) + "<strong>Other</strong><br>" + otherGroceries;
@@ -242,14 +288,37 @@ function addlSpace(input) {
   for (var i = 0; i < input; i++) {
     manyLines += oneLine;
   }
+  manyLines += "<br>";
   return manyLines;
 }
 
-// Gets a clean list of ingredients from thisRecipeObject for use in the printed pages
-var ingredientList = function(list) {
-  var ingredients = "";
-  for (var key in list){
-    ingredients += list[key] + "<br>";
+// this gets a clean list of ingredients from thisRecipeObject
+// ingredient object -> category array -> inner array with each ingredient
+// e.g., thisRecipeObject.ingredients
+var ingredientPlucker = function(ingredients) {
+  var ingredientText = "";
+  for (var key in ingredients){
+    ingredients[key].forEach(function(outer){
+      outer.forEach(function(item){
+        if (item.length > 1) {
+          ingredientText += item + "<br>";
+        }
+      })
+    })
   }
-  return ingredients;
-};
+  return ingredientText;
+}
+
+//this gets a list of ingredients from the category level of thisRecipeObject
+//e.g., thisRecipeObject.ingredients.meats
+var categoryIngredientPlucker = function(category) {
+  var ingredientText = "";
+  category.forEach(function(element){
+    element.forEach(function(item){
+      if (item.length > 1) {
+        ingredientText += item + "<br>";
+      }
+    });
+  });
+  return ingredientText;
+}

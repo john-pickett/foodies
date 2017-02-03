@@ -13,8 +13,7 @@ a {
 }
 
 .navbar {
-  padding-top: 10px;
-  background-color: #0099CC;
+  background-color: #0099CC !important;
   z-index: 9999;
   border: 0;
   font-size: 18px !important;
@@ -22,16 +21,17 @@ a {
 }
   .navbar li {
     display: inline;
-    color: white;
+    color: white !important;
   }
   .navbar a{
-    color: white;
+    color: white !important;
   }
-
 
 #wrapper {
 	margin-top: 50px;
 }
+
+/*Start of Home Page*/
 
 #recipeList {
 	margin:0 0 10px 0;
@@ -57,6 +57,20 @@ a {
 				padding:5px 10px;
 				text-align:center;
 			}
+#cuisine-select {
+  text-align: center;
+}
+#cuisine-select select{
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#search-recipes {
+  text-align: center;
+  margin-bottom: 10px;
+}
 
 #recipeInfo {
 	width:250px;
@@ -72,6 +86,16 @@ a {
 fieldset {
 	border:0;
 	padding:0; margin:0;
+}
+
+#menu-plan button{
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#selected-meals {
+  display: none;
 }
 
 /*Start of Add Recipe Page */
@@ -119,7 +143,11 @@ fieldset {
 
 .textbox {
   width: 304px;
-  height: 75px;
+  height: 50px;
+}
+
+#btnClear {
+  margin-bottom: 10px;
 }
 
 /*Start of Printed Pages */

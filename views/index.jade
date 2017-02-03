@@ -5,20 +5,26 @@ html
         link(rel='stylesheet', href='/public/stylesheets/style.css')
         link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
     body
-      div.navbar.navbar-fixed-top
-        .navbar
-          ul
-            li <a href="/">Home </a> |
-            li <a href="/newrecipe"> Add New Recipe </a>
+      .navbar.navbar-default.navbar-fixed-top
+        .container
+          .navbar-header.navbar-right
+            ul.nav.navbar-nav
+              <li><a href="/">Home</a></li>
+              <li><a href="/newrecipe">Add & Edit Recipes</a></li>
       #wrapper
         .container-fluid
           // RECIPE LIST TABLE
           .row
             .col-md-4
-              h2 Recipe List
+              h2.text-center Recipe List
               #recipeList
                 #cuisine-select
+                  h4 Select Cuisine
                   select(name="cuisine")
+                #search-recipes
+                  h4 Search Recipes
+                  input#search(type='text', placeholder='Enter Search Terms...')
+                  button#btnSearch Search
                 table
                   thead
                     th Select <input type='checkbox' id='selectAll'>
@@ -29,7 +35,7 @@ html
             // RECIPE DETAILS
             .col-md-4
               #recipeinfo
-                  h2 Recipe Details
+                  h2.text-center Recipe Details
                   p
                     strong Name
                     p <span id='recipeName'></span>
@@ -38,12 +44,17 @@ html
                     p <span id='recipeDescription'></span>
                     strong Rating
                     p <span id='recipeRating'></span>
+                    strong Required Ingredients
+                    p <span id='recipeIngredients'></span>
                   // /RECIPE INFO
             // MENU PLAN
             .col-md-4
-              h2 Menu Plan
+              h2.text-center Menu Plan
               #menu-plan
                 button#btnPrintList Print Grocery List
+                br
+                #selected-meals
+                  h4.text-center Selected Meals Are:
               // /MENU PLAN
         script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
         script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
